@@ -1,0 +1,12 @@
+VBox {
+    -fx-background-color: white;
+    -fx-border-color: black;
+    -fx-border-width: 3;
+}
+
+.blankButton {
+    -fx-border-color: null;
+    -fx-border-width: 0;
+    -fx-background-color: null;
+    -fx-padding: 0;
+}

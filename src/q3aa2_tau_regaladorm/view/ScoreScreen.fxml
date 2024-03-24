@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Rectangle2D?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="270.0" prefWidth="360.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="q3aa2_tau_regaladorm.controllers.ScoreScreenController">
+   <children>
+      <ImageView fx:id="background" fitHeight="240.0" fitWidth="360.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@assets/breadground.png" />
+         </image>
+         <viewport>
+            <Rectangle2D height="240.0" width="360.0" />
+         </viewport>
+      </ImageView>
+      <ImageView fx:id="frame" fitHeight="270.0" fitWidth="360.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@assets/border.png" />
+         </image>
+      </ImageView>
+      <GridPane>
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="149.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="91.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <StackPane prefHeight="150.0" prefWidth="200.0" GridPane.rowSpan="2">
+               <children>
+                  <ImageView fx:id="statsPaneBg" fitHeight="234.0" fitWidth="156.0">
+                     <image>
+                        <Image url="@assets/scoreCard.png" />
+                     </image>
+                  </ImageView>
+                  <GridPane>
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="94.0" minWidth="10.0" prefWidth="75.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="63.0" minWidth="10.0" prefWidth="60.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <Label text="day" />
+                        <Label text="served" GridPane.rowIndex="1" />
+                        <Label text="rating" GridPane.rowIndex="2" />
+                        <Label text="time" GridPane.rowIndex="3" />
+                        <Label text="100" GridPane.columnIndex="1" GridPane.halignment="RIGHT" />
+                        <Label text="100" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="1" />
+                        <Label text="100" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" />
+                        <Label text="100" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3" />
+                     </children>
+                     <padding>
+                        <Insets left="9.0" right="9.0" />
+                     </padding>
+                     <StackPane.margin>
+                        <Insets bottom="48.0" left="6.0" right="6.0" top="56.0" />
+                     </StackPane.margin>
+                  </GridPane>
+               </children>
+            </StackPane>
+            <FlowPane fx:id="resPane" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.valignment="BASELINE">
+               <children>
+                  <ImageView fx:id="resPaneBg">
+                     <image>
+                        <Image url="@assets/finalScore.png" />
+                     </image>
+                     <FlowPane.margin>
+                        <Insets />
+                     </FlowPane.margin>
+                  </ImageView>
+               </children>
+               <GridPane.margin>
+                  <Insets top="3.0" />
+               </GridPane.margin>
+            </FlowPane>
+            <Button fx:id="nextDay" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="84.0" prefWidth="156.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <graphic>
+                  <ImageView fx:id="nextDayBg" fitHeight="63.0" fitWidth="99.0" translateY="3.0">
+                     <image>
+                        <Image url="@assets/endDay.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Button>
+         </children>
+         <StackPane.margin>
+            <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+         </StackPane.margin>
+      </GridPane>
+   </children>
+   <stylesheets>
+        <URL value="@UniversalCSS.css" />        
+        <URL value="@ScoreScreenCSS.css" />
+    </stylesheets>
+</StackPane>
