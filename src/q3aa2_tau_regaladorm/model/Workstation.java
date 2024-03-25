@@ -6,11 +6,9 @@ import java.util.Arrays;
 public class Workstation implements Clickable {
     private String name;
     private ArrayList<Ingredient> contents;
-    private final String[] useMethods;
     
-    public Workstation(String name, String[] useMethods) {
+    public Workstation(String name) {
         this.name = name;
-        this.useMethods = useMethods;
     }
 
     @Override
@@ -18,10 +16,7 @@ public class Workstation implements Clickable {
         
     }
     
-    public void use(String useMethod) throws Exception {
-        if (!Arrays.asList(useMethods).contains(useMethod))
-            throw new Exception();
-        
+    public void use(String useMethod) throws Exception{
         Step checkedStep = new Step((Ingredient[]) contents.toArray(), this, useMethod).reference();
         if (checkedStep == null)
             throw new Exception();
@@ -43,9 +38,5 @@ public class Workstation implements Clickable {
 
     public ArrayList<Ingredient> getContents() {
         return contents;
-    }
-
-    public String[] getUseMethods() {
-        return useMethods;
     }
 }

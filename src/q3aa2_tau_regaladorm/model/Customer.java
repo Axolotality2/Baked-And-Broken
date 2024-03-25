@@ -4,61 +4,52 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Customer {
-    
-    private final int orderTime, orderSize;
+
     private final ArrayList<Product> order;
     private final Ingredient[] allergies;
-    private int totalRating, leaveTime;
+    private final long orderTime;
+    private long prepTime, leaveTime;
+    private int netRating, netSpeed;
 
-    public Customer(WeightedDist<Integer> complexityTable, int orderSize, Ingredient[] allergies, int leaveTime) {
-        this.order = getOrder(complexityTable, orderSize);
-        this.totalRating = this.orderSize = this.order.size();
-        this.allergies = allergies;
-        this.leaveTime = leaveTime;
-        this.orderTime = PlayerManager.getCurrTime();
-    }
-    
-    public Customer(WeightedDist<Integer> complexityTable, int orderSize, Ingredient[] allergies) {
-        this(complexityTable, orderSize, allergies, PlayerManager.getCurrTime());
-        for (Product p : order)
-            this.leaveTime += p.getPrepTime();
-    }
+    public Customer(Difficulty d) {
+        order = new ArrayList<>();
+        orderTime = GameMngr.getGameManager().getLevelMngr().getTime();
+        allergies = Ingredient.ALLERGENS.pickRandom(d.getAllergyTable().pickRandom());
 
-    public Customer(ArrayList<Product> order, Ingredient[] allergies, int leaveTime) {
-        this.order = order;
-        this.totalRating = this.orderSize = this.order.size();
-        this.allergies = allergies;
-        this.leaveTime = leaveTime;
-        this.orderTime = PlayerManager.getCurrTime();
-    }
-    
-    public Customer(ArrayList<Product> order, Ingredient[] allergies) {
-        this(order, allergies, PlayerManager.getCurrTime());
-        for (Product p : order)
-            this.leaveTime += p.getPrepTime();
-    }
-
-    private ArrayList<Product> getOrder(WeightedDist<Integer> complexityTable, int variation, int orderSize) {
-        ArrayList<Product> orderList = new ArrayList<>();
-        Product[] orderable;
-        int index;
-        
-        for (int i = 0; i < orderSize; i++) {
-            orderable = Product.filterByComplexity(complexityTable.pickRandom(), variation); 
-            index = (int) (Math.random() * (orderable.length - 1));
-            orderList.add(orderable[index]);
+        for (int i = 0; i < d.getOrderSizeTable().pickRandom(); i++) {
+            Product[] orderable = Product.filterByComplexity(d.getComplexityTable().pickRandom());
+            int index = (int) (Math.random() * (orderable.length - 1));
+                        
+            order.add(orderable[index]);
+            prepTime += orderable[index].getPrepTime();
         }
-
-        return orderList;
+        
+        leaveTime = orderTime + prepTime;
     }
 
-    private ArrayList<Product> getOrder(WeightedDist<Integer> complexityTable, int orderSize) {
-        return this.getOrder(complexityTable, 0, orderSize);
+    public Customer(ArrayList<Product> order, Ingredient[] allergies, long leaveTime) {
+        this.order = order;
+        this.allergies = allergies;
+        this.leaveTime = leaveTime;
+        orderTime = GameMngr.getGameManager().getLevelMngr().getTime();
     }
 
-    public int rateProduct(Product product, int currentTime) throws Exception {
+    public Customer(ArrayList<Product> order, Ingredient[] allergies) {
+        this.order = order;
+        this.allergies = allergies;
+        orderTime = GameMngr.getGameManager().getLevelMngr().getTime();
+        
+        for (Product p : order) {
+            prepTime += p.getPrepTime();
+        }
+        
+        leaveTime = orderTime + prepTime;
+    }
+
+    public int rateProduct(Product product) throws Exception {
+        long currentTime = GameMngr.getGameManager().getLevelMngr().getTime();
         int score = 1;
-        int percentTimeSpent = (currentTime - orderTime) / (currentTime - leaveTime);
+        netSpeed = (int)(100 * (currentTime - orderTime) / prepTime);
         boolean allergenFree = true;
 
         if (!order.remove(product)) { // Remove from remaining order
@@ -72,36 +63,40 @@ public class Customer {
             }
         }
 
-        if (percentTimeSpent < 0.90) {
+        if (netSpeed < 0.90) {
             score++;
         }
-        if (percentTimeSpent < 0.60) {
+        if (netSpeed < 0.60) {
             score++;
         }
         if (allergenFree) {
             score++;
         }
 
-        this.totalRating += score;
+        this.netRating += score;
         return score;
     }
 
     public float getOverallRating() {
-        return totalRating / orderSize;
+        return netRating / order.size();
+    }
+    
+    public float getOverallSpeed() {
+        return netSpeed / order.size();
     }
 
-    public int getLeaveTime() {
+    public long getLeaveTime() {
         return leaveTime;
     }
 
     public ArrayList<Product> getOrder() {
         return order;
     }
-    
-    public void setLeaveTime(int leaveTime) {
+
+    public void setLeaveTime(long leaveTime) {
         this.leaveTime = leaveTime;
     }
-    
+
     public void setLeaveTime(float multiplier) {
         this.leaveTime *= multiplier;
     }

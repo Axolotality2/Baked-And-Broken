@@ -1,10 +1,10 @@
 package q3aa2_tau_regaladorm.model;
 
 public class Denser extends Level {
-    public Denser(WeightedDist<Integer> complexityTable, WeightedDist<Integer> orderSizeTable, WeightedDist<Float> timeMultTable, int initialCustomerCount) {
-        super(complexityTable, orderSizeTable, initialCustomerCount);
+    public Denser(Difficulty difficulty, int initialCustomerCount) {
+        super(difficulty, initialCustomerCount);
         
-        for (Customer c : this.customers)
-            c.setLeaveTime(c.getLeaveTime() * timeMultTable.pickRandom());
+        for (int i = 0; i < difficulty.getCustomerCountTable().pickRandom() / 4; i++)
+            addCustomer();
     }
 }
