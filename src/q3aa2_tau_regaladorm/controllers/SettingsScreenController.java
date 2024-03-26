@@ -37,7 +37,7 @@ public class SettingsScreenController implements Initializable {
     
     @FXML 
     private void openControls(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/q3aa2_tau_regaladorm/view/SettingsScreen.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/q3aa2_tau_regaladorm/view/ControlsScreen.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);
 
@@ -47,18 +47,23 @@ public class SettingsScreenController implements Initializable {
     }
     
     @FXML 
-    private void back(ActionEvent event) {
+    private void back(ActionEvent event) throws IOException {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        Scene scene = prevScene;
-
+        
         stage.hide();
-        stage.setScene(scene);
+        if (prevScene != null) {
+            stage.setScene(prevScene);
+        } else {
+            Parent root = FXMLLoader.load(getClass().getResource("/q3aa2_tau_regaladorm/view/HomeScreen.fxml"));
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+        }
         stage.show();
     }
     
     @FXML 
     private void quitGame() {
-        
+        javafx.application.Platform.exit();
     }
     
     @Override
