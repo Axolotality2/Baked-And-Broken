@@ -1,6 +1,6 @@
 package q3aa2_tau_regaladorm.model;
 
-public class Ingredient implements Draggable {
+public class Ingredient {
     public static final WeightedDist<Ingredient> ALLERGENS = new WeightedDist<>();
     
     protected final Ingredient[] allergens;
@@ -25,15 +25,5 @@ public class Ingredient implements Draggable {
         this.steps = steps;
         this.isFood = isFood;
         this.allergens = allergens;
-    }
-
-    @Override
-    public void drag() {
-        
-    }
-
-    @Override
-    public void click() {
-        
     }
 }

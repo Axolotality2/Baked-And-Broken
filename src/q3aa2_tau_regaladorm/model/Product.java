@@ -2,7 +2,7 @@ package q3aa2_tau_regaladorm.model;
 
 import java.util.ArrayList;
 
-public class Product extends Ingredient implements Draggable {
+public class Product extends Ingredient{
 
     public static final Product[] ORDERS = new Product[]{};
     private static final int BASE_TIME = 30, TIME_ADDITION = 10;
@@ -30,16 +30,6 @@ public class Product extends Ingredient implements Draggable {
         return filterByComplexity(complexity, 0);
     }
     
-    @Override
-    public void click() {
-
-    }
-
-    @Override
-    public void drag() {
-
-    }
-
     public String getName() {
         return name;
     }

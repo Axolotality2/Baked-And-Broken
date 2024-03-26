@@ -12,7 +12,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
-import q3aa2_tau_regaladorm.Q3AA2_TAU_RegaladoRM;
+import q3aa2_tau_regaladorm.model.GameMngr;
 
 public class HomeScreenController implements Initializable {
 
@@ -29,6 +29,7 @@ public class HomeScreenController implements Initializable {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);
 
+        GameMngr.getGameManager().getLevelMngr().startBlankDay();
         stage.hide();
         stage.setScene(scene);
         stage.show();
@@ -47,10 +48,15 @@ public class HomeScreenController implements Initializable {
 
     @FXML
     private void openSettings(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/q3aa2_tau_regaladorm/view/SettingsScreen.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/q3aa2_tau_regaladorm/view/SettingsScreen.fxml"));
+        
+        Parent root = loader.load();
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);
 
+        SettingsScreenController controller = loader.getController();
+        controller.setPrevScene(((Node) event.getSource()).getScene());
+        
         stage.hide();
         stage.setScene(scene);
         stage.show();

@@ -3,17 +3,12 @@ package q3aa2_tau_regaladorm.model;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class Workstation implements Clickable {
+public class Workstation{
     private String name;
     private ArrayList<Ingredient> contents;
     
     public Workstation(String name) {
         this.name = name;
-    }
-
-    @Override
-    public void click() {
-        
     }
     
     public void use(String useMethod) throws Exception{

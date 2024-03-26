@@ -8,32 +8,27 @@ public class GameMngr {
     private static GameMngr gameMngr = new GameMngr();
     private PlayerData playerData;
     private LevelMngr levelMngr;
+    private ControlMngr controlMngr;
 
     public GameMngr() {
         this.playerData = new PlayerData();
         this.levelMngr = new LevelMngr();
+        this.controlMngr = new ControlMngr();
     }
 
     public static class ControlMngr {
 
-        enum Action {
-            PAUSE,
-            TOGGLE_PANTRY,
-            SWAP_WORKSTATION,
-            RELEASE_CONTENTS
-        }
-
-        private final HashMap<KeyCode, Action> keyMap;
+        private static final String[] actions = {"pause", "togglePantry", "swapWorkstation", "releaseContents"};
+        private static final HashMap<String, KeyCode> keyMap = new HashMap<>();
 
         public ControlMngr() {
-            this.keyMap = new HashMap<>();
-            this.keyMap.put(KeyCode.ESCAPE, Action.PAUSE);
-            this.keyMap.put(KeyCode.P, Action.TOGGLE_PANTRY);
-            this.keyMap.put(KeyCode.TAB, Action.SWAP_WORKSTATION);
-            this.keyMap.put(KeyCode.SPACE, Action.RELEASE_CONTENTS);
+            this.keyMap.put(actions[0], KeyCode.ESCAPE);
+            this.keyMap.put(actions[1], KeyCode.P);
+            this.keyMap.put(actions[2], KeyCode.TAB);
+            this.keyMap.put(actions[3], KeyCode.SPACE);
         }
 
-        public HashMap getKeyMap() {
+        public static HashMap getKeyMap() {
             return keyMap;
         }
     }
@@ -54,21 +49,24 @@ public class GameMngr {
             this.level = null;
         }
 
-        private void startDay() {
+        public void startDay() {
             time = 0;
             this.level = new Level(difficulty);
         }
 
-        private void startBlankDay() {
+        public void startBlankDay() {
             time = 0;
             this.level = new Level(Difficulty.EASY);
         }
 
-        private void endDay() {
+        public void endDay() throws Exception {
+            day++;
+            
             playerData.setCustomersServed(playerData.getCustomersServed() + level.getCustomersServed());
-            playerData.setDay(playerData.getDay() + 1);
+            playerData.setDay(day);
             playerData.setTotalRating(playerData.getTotalRating() + level.getTotalRating());
             playerData.setTotalSpeed(playerData.getTotalSpeed() + level.getTotalSpeed());
+            setDefaultDifficulty();
         }
 
         private void checkRating() {

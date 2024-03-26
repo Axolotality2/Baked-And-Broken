@@ -11,12 +11,40 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import q3aa2_tau_regaladorm.model.GameMngr;
 
 public class ControlsScreenController implements Initializable {
     
     @FXML
     private Button exitBtn;
+    @FXML
+    private Button pauseScreen;
+    @FXML
+    private Button togglePantry;
+    @FXML
+    private Button swapStation;
+    @FXML
+    private Button dropContents;
+    
+    @FXML
+    private void pressKey(ActionEvent event) {
+        ((Node)event.getSource()).requestFocus();
+    }
+    
+    @FXML
+    private void changeKey(KeyEvent event) {
+        Button source = (Button)event.getSource();
+        
+        if(!source.isFocused()) {
+            return;
+        }
+        
+        GameMngr.ControlMngr.getKeyMap().put(source.getId(), event.getCode());
+        source.setText(event.getCode().getName().toLowerCase());
+        source.getScene().getRoot().requestFocus();
+    }
     
     @FXML
     private void saveAndExit(ActionEvent event) throws IOException {

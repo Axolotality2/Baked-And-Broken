@@ -42,7 +42,7 @@
         </rowConstraints>
          <children>
             <Slider maxHeight="-Infinity" maxWidth="-Infinity" orientation="VERTICAL" prefHeight="242.0" prefWidth="97.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowSpan="3" />
-            <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="270.0" text="save and exit" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+            <Button fx:id="exitBtn" mnemonicParsing="false" onAction="#saveAndExit" prefHeight="25.0" prefWidth="270.0" text="save and exit" GridPane.halignment="CENTER" GridPane.rowIndex="2">
                <font>
                   <Font name="System Bold" size="13.0" />
                </font>
@@ -60,7 +60,7 @@
                         <Font size="15.0" />
                      </font>
                   </Label>
-                  <Button maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" prefHeight="29.0" prefWidth="125.0" text="esc">
+                  <Button fx:id="pauseScreen" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onKeyReleased="#changeKey" prefHeight="29.0" prefWidth="125.0" text="esc">
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font>
@@ -70,7 +70,7 @@
                         <Font size="15.0" />
                      </font>
                   </Label>
-                  <Button maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" prefHeight="29.0" prefWidth="125.0" text="p">
+                  <Button fx:id="togglePantry" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onKeyReleased="#changeKey" prefHeight="29.0" prefWidth="125.0" text="p">
                      <font>
                         <Font name="System Bold Italic" size="15.0" />
                      </font>
@@ -80,7 +80,7 @@
                         <Font size="15.0" />
                      </font>
                   </Label>
-                  <Button maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" prefHeight="29.0" prefWidth="125.0" text="tab">
+                  <Button fx:id="swapStation" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onKeyReleased="#changeKey" prefHeight="29.0" prefWidth="125.0" text="tab">
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font>
@@ -90,7 +90,7 @@
                         <Font size="15.0" />
                      </font>
                   </Label>
-                  <Button maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" prefHeight="29.0" prefWidth="125.0" text="dbl-click">
+                  <Button fx:id="dropContents" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onKeyReleased="#changeKey" prefHeight="29.0" prefWidth="125.0" text="dbl-click">
                      <font>
                         <Font name="System Bold" size="15.0" />
                      </font>
