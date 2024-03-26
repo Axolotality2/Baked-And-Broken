@@ -13,6 +13,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
 import javafx.scene.media.Media;
@@ -21,18 +22,23 @@ import javafx.stage.Stage;
 
 public class SettingsScreenController implements Initializable {
     
-    @FXML
-    private Slider mainSlider, ambientSlider, musicSlider;
+    @FXML 
+    private Button maximize, controls, back, quitGame;
+    @FXML 
     private Scene prevScene;
     @FXML
-    private ImageView background;
+    private Slider mainSlider, ambientSlider, musicSlider;
     @FXML
-    private ImageView frame;
+    private ImageView background, frame;
     
     public void setPrevScene(Scene s) {
         this.prevScene = s;
     }
     
+    @FXML
+    private void toggleMaximize() {
+
+    }
     
     @FXML 
     private void openControls(ActionEvent event) throws IOException {
@@ -70,6 +76,7 @@ public class SettingsScreenController implements Initializable {
         String path = new File("src/q3aa2_tau_regaladorm/view/assets/backgroundmusic.mp3").getAbsolutePath();
         Media media = new Media(new File(path).toURI().toString()); 
         MediaPlayer mediaPlayer = new MediaPlayer(media);
+        
         mediaPlayer.setOnEndOfMedia(new Runnable() {
             @Override
             public void run() {
@@ -77,12 +84,22 @@ public class SettingsScreenController implements Initializable {
                 mediaPlayer.setAutoPlay(true);
             }
         });
+        
         mediaPlayer.setAutoPlay(true);
+        
+        mainSlider.setValue(mediaPlayer.getVolume() * 100);
+        mainSlider.valueProperty().addListener(new InvalidationListener() {
+            @Override
+            public void invalidated(javafx.beans.Observable observable) {
+                mediaPlayer.setVolume(mainSlider.getValue() / 100);
+            }
+        });
+        
         musicSlider.setValue(mediaPlayer.getVolume() * 100);
         musicSlider.valueProperty().addListener(new InvalidationListener() {
             @Override
             public void invalidated(javafx.beans.Observable observable) {
-                mediaPlayer.setVolume(musicSlider.getValue() / 100);
+                mediaPlayer.setVolume((musicSlider.getValue() * (mainSlider.getValue() / 100)) / 100);
             }
         });
     }    

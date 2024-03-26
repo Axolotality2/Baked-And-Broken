@@ -13,7 +13,7 @@ public class Q3AA2_TAU_RegaladoRM extends Application {
     public void start(Stage stage) throws Exception {
         Font.loadFont(getClass().getResourceAsStream("assets/cs4-proj-font.ttf"), 12);      
         
-        Parent root = FXMLLoader.load(getClass().getResource("view/SettingsScreen.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("view/HomeScreen.fxml"));
         
         Scene scene = new Scene(root);
         
