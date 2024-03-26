@@ -44,9 +44,9 @@
             <Insets bottom="24.0" left="24.0" right="24.0" top="24.0" />
          </StackPane.margin>
          <children>
-            <Slider blockIncrement="1.0" majorTickUnit="1.0" max="6.0" min="1.0" minorTickCount="1" prefWidth="282.0" snapToTicks="true" value="1.0" GridPane.columnSpan="2" />
-            <Slider blockIncrement="1.0" layoutX="10.0" layoutY="19.0" majorTickUnit="1.0" max="6.0" min="1.0" minorTickCount="1" prefWidth="282.0" snapToTicks="true" value="1.0" GridPane.columnSpan="2" GridPane.rowIndex="1" />
-            <Slider blockIncrement="1.0" layoutX="10.0" layoutY="51.0" majorTickUnit="1.0" max="6.0" min="1.0" minorTickCount="1" prefWidth="282.0" snapToTicks="true" value="1.0" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+            <Slider fx:id="mainSlider" prefWidth="282.0" snapToTicks="true" value="100.0" GridPane.columnSpan="2" />
+            <Slider fx:id="ambientSlider" layoutX="10.0" layoutY="19.0" prefWidth="282.0" snapToTicks="true" value="100.0" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+            <Slider fx:id="musicSlider" layoutX="10.0" layoutY="51.0" prefWidth="282.0" snapToTicks="true" value="100.0" GridPane.columnSpan="2" GridPane.rowIndex="2" />
             <Button mnemonicParsing="false" prefHeight="28.0" prefWidth="147.0" text="maximize" GridPane.rowIndex="3" />
             <Button layoutX="10.0" layoutY="110.0" mnemonicParsing="false" onAction="#openControls" prefHeight="28.0" prefWidth="147.0" text="controls" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
                <GridPane.margin>
