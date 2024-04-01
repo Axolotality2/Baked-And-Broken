@@ -14,7 +14,7 @@ public class Customer {
     public Customer(Difficulty d) {
         order = new ArrayList<>();
         orderTime = GameMngr.getGameManager().getLevelMngr().getTime();
-        allergies = Ingredient.ALLERGENS.pickRandom(d.getAllergyTable().pickRandom());
+        allergies = Ingredient.getALLERGENS().pickRandom(d.getAllergyTable().pickRandom());
 
         for (int i = 0; i < d.getOrderSizeTable().pickRandom(); i++) {
             Product[] orderable = Product.filterByComplexity(d.getComplexityTable().pickRandom());

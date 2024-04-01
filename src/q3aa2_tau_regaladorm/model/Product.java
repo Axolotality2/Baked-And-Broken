@@ -31,15 +31,15 @@ public class Product extends Ingredient{
     }
     
     public String getName() {
-        return name;
+        return getName();
     }
 
     public Step[] getSteps() {
-        return steps;
+        return getSteps();
     }
 
     public boolean isFood() {
-        return isFood;
+        return isIsFood();
     }
 
     public int getComplexity() {
@@ -51,6 +51,6 @@ public class Product extends Ingredient{
     }
     
     public Ingredient[] getAllergens() {
-        return allergens;
+        return getAllergens();
     }
 }

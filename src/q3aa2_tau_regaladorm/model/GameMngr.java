@@ -16,10 +16,10 @@ public class GameMngr {
         this.controlMngr = new ControlMngr();
     }
 
-    public static class ControlMngr {
+    public class ControlMngr {
 
-        private static final String[] actions = {"pause", "togglePantry", "swapWorkstation", "releaseContents"};
-        private static final HashMap<String, KeyCode> keyMap = new HashMap<>();
+        private final String[] actions = {"pause", "togglePantry", "swapWorkstation", "releaseContents"};
+        private final HashMap<String, KeyCode> keyMap = new HashMap<>();
 
         public ControlMngr() {
             this.keyMap.put(actions[0], KeyCode.ESCAPE);
@@ -28,7 +28,7 @@ public class GameMngr {
             this.keyMap.put(actions[3], KeyCode.SPACE);
         }
 
-        public static HashMap getKeyMap() {
+        public HashMap getKeyMap() {
             return keyMap;
         }
     }
@@ -89,7 +89,7 @@ public class GameMngr {
             time++;
         }
 
-        public Level getDay() {
+        public Level getLevel() {
             return level;
         }
 
@@ -136,5 +136,9 @@ public class GameMngr {
 
     public LevelMngr getLevelMngr() {
         return levelMngr;
+    }
+    
+    public ControlMngr getControlMngr() {
+        return controlMngr;
     }
 }

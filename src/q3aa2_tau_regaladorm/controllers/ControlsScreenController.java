@@ -27,6 +27,7 @@ public class ControlsScreenController implements Initializable {
     private Button swapStation;
     @FXML
     private Button dropContents;
+    private GameMngr gameMngr = GameMngr.getGameManager();
     
     @FXML
     private void pressKey(ActionEvent event) {
@@ -41,7 +42,7 @@ public class ControlsScreenController implements Initializable {
             return;
         }
         
-        GameMngr.ControlMngr.getKeyMap().put(source.getId(), event.getCode());
+        gameMngr.getControlMngr().getKeyMap().put(source.getId(), event.getCode());
         source.setText(event.getCode().getName().toLowerCase());
         source.getScene().getRoot().requestFocus();
     }

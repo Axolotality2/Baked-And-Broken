@@ -12,8 +12,8 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.TilePane?>
 
 <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="270.0" prefWidth="360.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="q3aa2_tau_regaladorm.controllers.MainScreenController">
    <children>
@@ -24,12 +24,12 @@
          <children>
             <AnchorPane prefHeight="264.0" prefWidth="117.0" styleClass="cashier-pane">
                <children>
-                  <ImageView layoutX="27.0" layoutY="69.0">
+                  <ImageView fx:id="customer" layoutX="27.0" layoutY="69.0">
                      <image>
                         <Image url="@assets/customer.png" />
                      </image>
                   </ImageView>
-                  <ImageView layoutX="60.0" layoutY="21.0">
+                  <ImageView fx:id="clock" layoutX="60.0" layoutY="21.0">
                      <image>
                         <Image url="@assets/clock.png" />
                      </image>
@@ -95,42 +95,10 @@
                            </children></AnchorPane>
                         <ScrollPane fx:id="pantryPane" hbarPolicy="NEVER" minHeight="0.0" prefHeight="92.0" prefWidth="228.0" vbarPolicy="NEVER">
                            <content>
-                              <FlowPane fx:id="pantry" minHeight="0.0" prefWidth="228.0" styleClass="pantry">
-                                 <children>
-                                    <TilePane hgap="9.0" prefHeight="48.0" prefWidth="228.0" styleClass="shelf">
-                                       <FlowPane.margin>
-                                          <Insets top="12.0" />
-                                       </FlowPane.margin>
-                                       <children>
-                                          <ImageView>
-                                             <image>
-                                                <Image url="@assets/sugar.png" />
-                                             </image>
-                                          </ImageView>
-                                          <ImageView>
-                                             <image>
-                                                <Image url="@assets/flour.png" />
-                                             </image>
-                                          </ImageView>
-                                          <ImageView>
-                                             <image>
-                                                <Image url="@assets/milk.png" />
-                                             </image>
-                                          </ImageView>
-                                       </children>
-                                       <padding>
-                                          <Insets left="6.0" top="6.0" />
-                                       </padding>
-                                    </TilePane>
-                                    <TilePane hgap="9.0" layoutX="10.0" layoutY="22.0" prefHeight="48.0" prefWidth="228.0" styleClass="shelf">
-                                       <padding>
-                                          <Insets left="6.0" top="6.0" />
-                                       </padding>
-                                       <FlowPane.margin>
-                                          <Insets top="12.0" />
-                                       </FlowPane.margin>
-                                    </TilePane>
-                                 </children>
+                              <FlowPane fx:id="pantry" hgap="9.0" prefWidth="228.0" styleClass="pantry" vgap="27.0">
+                                 <padding>
+                                    <Insets bottom="18.0" left="6.0" right="6.0" top="21.0" />
+                                 </padding>
                               </FlowPane>
                            </content>
                         </ScrollPane>
@@ -143,6 +111,7 @@
             </StackPane>
          </children>
       </HBox>
+      <Pane fx:id="dragPane" prefHeight="200.0" prefWidth="200.0" />
    </children>
    <stylesheets>
         <URL value="@UniversalCSS.css" />        

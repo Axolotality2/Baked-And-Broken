@@ -27,28 +27,28 @@ public class Level {
             addCustomer();
     }
     
-    protected void addCustomer() {
+    protected final void addCustomer() {
         customers.add(new Customer(difficulty));
     }
 
     protected void addCustomer(Customer customer) {
-        this.customers.add(customer);
+        customers.add(customer);
     }
     
-    public void removeCustomer(Customer customer) throws Exception {
-        if (!customers.remove(customer))
-            throw new Exception();
-        
-        totalSpeed += customer.getOverallSpeed();
-        totalRating += customer.getOverallRating();
+    public void removeCustomer() throws IndexOutOfBoundsException {
+        removeCustomer(0);
     }
-
-    public void removeCustomer(int index) throws Exception {
-        if (!customers.remove(customers.get(index)))
-            throw new Exception();
+    
+    public void removeCustomer(int index) throws IndexOutOfBoundsException {
+        Customer customerFound = customers.get(index);
         
-        totalSpeed += customers.get(index).getOverallSpeed();
-        totalRating += customers.get(index).getOverallRating();
+        totalSpeed += customerFound.getOverallSpeed();
+        totalRating += customerFound.getOverallRating();
+        customers.remove(index);
+        
+        if (index == 0) {
+            currentCustomer = customers.get(index);
+        }
     }
 
     public Customer getCurrentCustomer() {
