@@ -51,71 +51,67 @@ public class MainScreenController implements Initializable {
 
         fadeOut.play();
     }
-    
-    private ArrayList<Node> showBaseIngredients(Ingredient[] baseIngredientArray) {
 
-        ArrayList<Node> ingredientList = new ArrayList<>();
+    private class BaseIngredient extends ImageView {
 
-        for (Ingredient baseIngredient : baseIngredientArray) {
-            ImageView ingredientNode = new ImageView();
-            ingredientNode.setImage(baseIngredient.getImage());
-            ingredientNode.setId("base-" + baseIngredient.getName());
-            ingredientList.add(makeCloneable(ingredientNode));
+        private Ingredient ingredient;
+
+        private BaseIngredient(Ingredient ingredient) {
+            this.ingredient = ingredient;
+
+            this.setImage(ingredient.getImage());
+            this.setId("base-" + ingredient.getName());
+
+            this.addEventFilter(MouseEvent.MOUSE_PRESSED, (final MouseEvent event) -> {
+                DragIngredient dragIngredient = new DragIngredient(this);
+
+                dragPane.getChildren().add(dragIngredient);
+                dragIngredient.requestFocus();
+            });
+
         }
-
-        pantry.getChildren().addAll(ingredientList);
-
-        return ingredientList;
     }
 
-    private Node makeCloneable(final Node node) {
-        node.addEventFilter(MouseEvent.MOUSE_PRESSED, (final MouseEvent event) -> {
-            System.out.println("AAA");
-            ImageView child = new ImageView();
-            child.setImage(((ImageView) node).getImage());
-            child.setId(node.getId().split("-")[1]);
-            child.setLayoutX(node.localToScene(node.getBoundsInLocal()).getMinX());
-            child.setLayoutY(node.localToScene(node.getBoundsInLocal()).getMinY());
+    private class DragIngredient extends Group {
 
-            dragPane.getChildren().add(makeDraggable(child));
+        private Ingredient ingredient;
 
-            child.requestFocus();
-        });
+        private DragIngredient(BaseIngredient base) {
+            final DragContext dragContext = new DragContext();
+            this.ingredient = base.ingredient;
 
-        return node;
-    }
+            ImageView iv = new ImageView(((ImageView) base).getImage());
+            this.setId(base.getId().split("-")[1]);
+            this.setLayoutX(base.localToScene(base.getBoundsInLocal()).getMinX());
+            this.setLayoutY(base.localToScene(base.getBoundsInLocal()).getMinY());
+            this.getChildren().add(iv);
 
-    private Node makeDraggable(final Node node) {
-        final DragContext dragContext = new DragContext();
-        final Group wrapGroup = new Group(node);
+            this.addEventFilter(MouseEvent.ANY, (final MouseEvent mouseEvent) -> {
+                mouseEvent.consume();
+            });
 
-        wrapGroup.addEventFilter(MouseEvent.ANY, (final MouseEvent mouseEvent) -> {
-            mouseEvent.consume();
-        });
+            this.addEventFilter(MouseEvent.MOUSE_PRESSED, (final MouseEvent mouseEvent) -> {
+                activeItem = (ImageView) iv;
 
-        wrapGroup.addEventFilter(MouseEvent.MOUSE_PRESSED, (final MouseEvent mouseEvent) -> {
-            activeItem = (ImageView)node;
-            
-            dragContext.mouseAnchorX = mouseEvent.getX();
-            dragContext.mouseAnchorY = mouseEvent.getY();
-            dragContext.initialTranslateX
-                    = node.getTranslateX();
-            dragContext.initialTranslateY
-                    = node.getTranslateY();
-        });
+                dragContext.mouseAnchorX = mouseEvent.getX();
+                dragContext.mouseAnchorY = mouseEvent.getY();
+                dragContext.initialTranslateX
+                        = iv.getTranslateX();
+                dragContext.initialTranslateY
+                        = iv.getTranslateY();
+            });
 
-        wrapGroup.addEventFilter(MouseEvent.MOUSE_DRAGGED, (final MouseEvent mouseEvent) -> {
-            node.setTranslateX(
-                    dragContext.initialTranslateX
-                    + mouseEvent.getX()
-                    - dragContext.mouseAnchorX);
-            node.setTranslateY(
-                    dragContext.initialTranslateY
-                    + mouseEvent.getY()
-                    - dragContext.mouseAnchorY);
-        });
-
-        return wrapGroup;
+            this.addEventFilter(MouseEvent.MOUSE_DRAGGED, (final MouseEvent mouseEvent) -> {
+                iv.setTranslateX(
+                        dragContext.initialTranslateX
+                        + mouseEvent.getX()
+                        - dragContext.mouseAnchorX);
+                iv.setTranslateY(
+                        dragContext.initialTranslateY
+                        + mouseEvent.getY()
+                        - dragContext.mouseAnchorY);
+            });
+        }
     }
 
     private static class DragContext {
@@ -126,12 +122,53 @@ public class MainScreenController implements Initializable {
         public double initialTranslateY;
     }
 
+    private abstract class ItemZone extends ImageView {
+        abstract void lower(DragIngredient ingredient);
+    }
+    
+    private class HoldZone extends ItemZone {
+
+        @Override
+        void lower(DragIngredient ingredient) {
+            
+        }
+    }
+    
+    private abstract class DropZone extends ItemZone {
+        private final ArrayList<DragIngredient> inventory = new ArrayList<>();
+        
+        protected ArrayList<DragIngredient> getInventory() {
+            return inventory;
+        }
+    }
+    
+    private class CustomerNode extends DropZone {
+
+        @Override
+        void lower(DragIngredient ingredient) {
+            this.getInventory().add(ingredient);
+        }
+        
+    }
+    
+    private class WorkstationNode extends DropZone {
+
+        @Override
+        void lower(DragIngredient ingredient) {
+            this.getInventory().add(ingredient);
+        }
+        
+    }
+    
+    
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
         dragPane.setPickOnBounds(false);
 
-        Ingredient[] arr = new Ingredient[]{
+        ArrayList<BaseIngredient> bases = new ArrayList<>();
+        Ingredient[] ingredients = new Ingredient[]{
             new Ingredient("flour", true, false),
             new Ingredient("milk", true, false),
             new Ingredient("sugar", true, false),
@@ -140,9 +177,11 @@ public class MainScreenController implements Initializable {
             new Ingredient("yeast", true, false),
             new Ingredient("egg", true, false)
         };
-
-        showBaseIngredients(arr);
-
+        
+        for (Ingredient ing : ingredients)
+            bases.add(new BaseIngredient(ing));
+        
+        pantry.getChildren().addAll(bases);
         customerEnter();
     }
 
