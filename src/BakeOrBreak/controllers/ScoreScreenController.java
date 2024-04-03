@@ -1,4 +1,4 @@
-package q3aa2_tau_regaladorm.controllers;
+package BakeOrBreak.controllers;
 
 import java.io.IOException;
 import java.net.URL;
@@ -20,7 +20,7 @@ public class ScoreScreenController implements Initializable {
 
     @FXML
     private void endDay(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/q3aa2_tau_regaladorm/view/MainScreen.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/BakeOrBreak/view/MainScreen.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);
 

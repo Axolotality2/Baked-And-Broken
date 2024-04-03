@@ -1,4 +1,4 @@
-package q3aa2_tau_regaladorm.model;
+package BakeOrBreak.model;
 
 import javafx.scene.image.Image;
 
@@ -16,7 +16,7 @@ public class Ingredient {
         this.name = name;
         this.steps = new Step[0];
         this.isFood = isFood;
-        this.image = new Image(getClass().getResourceAsStream("/q3aa2_tau_regaladorm/view/assets/food/" + name + ".png"));
+        this.image = new Image(getClass().getResourceAsStream("/BakeOrBreak/view/assets/food/" + name + ".png"));
         
         if (isAllergen) 
             this.allergens = new Ingredient[] { this };

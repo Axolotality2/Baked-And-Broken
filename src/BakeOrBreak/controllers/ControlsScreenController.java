@@ -1,4 +1,4 @@
-package q3aa2_tau_regaladorm.controllers;
+package BakeOrBreak.controllers;
 
 import java.io.IOException;
 import java.net.URL;
@@ -13,7 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-import q3aa2_tau_regaladorm.model.GameMngr;
+import BakeOrBreak.model.GameMngr;
 
 public class ControlsScreenController implements Initializable {
     
@@ -49,7 +49,7 @@ public class ControlsScreenController implements Initializable {
     
     @FXML
     private void saveAndExit(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/q3aa2_tau_regaladorm/view/SettingsScreen.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/BakeOrBreak/view/SettingsScreen.fxml"));
         Stage stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);
         

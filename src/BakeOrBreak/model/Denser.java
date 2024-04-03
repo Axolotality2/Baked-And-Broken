@@ -1,4 +1,4 @@
-package q3aa2_tau_regaladorm.model;
+package BakeOrBreak.model;
 
 public class Denser extends Level {
     public Denser(Difficulty difficulty, int initialCustomerCount) {

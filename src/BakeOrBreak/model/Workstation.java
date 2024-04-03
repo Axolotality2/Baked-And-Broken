@@ -1,14 +1,17 @@
-package q3aa2_tau_regaladorm.model;
+package BakeOrBreak.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import javafx.scene.image.Image;
 
 public class Workstation{
     private String name;
+    private Image image;
     private ArrayList<Ingredient> contents;
     
-    public Workstation(String name) {
+    public Workstation(String name, Image image) {
         this.name = name;
+        this.image = image;
     }
     
     public void use(String useMethod) throws Exception{

@@ -1,4 +1,4 @@
-package q3aa2_tau_regaladorm.model;
+package BakeOrBreak.model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -10,6 +10,7 @@ public class Customer {
     private final long orderTime;
     private long prepTime, leaveTime;
     private int netRating, netSpeed;
+    private static GameMngr gameManager = GameMngr.getGameManager();
 
     public Customer(Difficulty d) {
         order = new ArrayList<>();
@@ -37,7 +38,7 @@ public class Customer {
     public Customer(ArrayList<Product> order, Ingredient[] allergies) {
         this.order = order;
         this.allergies = allergies;
-        orderTime = GameMngr.getGameManager().getLevelMngr().getTime();
+        orderTime = gameManager.getLevelMngr().getTime();
         
         for (Product p : order) {
             prepTime += p.getPrepTime();
@@ -48,31 +49,19 @@ public class Customer {
 
     public int rateProduct(Product product) throws Exception {
         long currentTime = GameMngr.getGameManager().getLevelMngr().getTime();
-        int score = 1;
+        int score = 2;
         netSpeed = (int)(100 * (currentTime - orderTime) / prepTime);
-        boolean allergenFree = true;
 
-        if (!order.remove(product)) { // Remove from remaining order
-            throw new Exception();
+        if (!order.remove(product)) {
+            order.remove(0);
         }
-
+        
         for (Ingredient allergy : allergies) // Test for allergies
-        {
-            if (Arrays.asList(product.getAllergens()).contains(allergy)) {
-                allergenFree = false;
-            }
-        }
+            score = Arrays.asList(product.getAllergens()).contains(allergy) ? 2 : 3;
 
-        if (netSpeed < 0.90) {
-            score++;
-        }
-        if (netSpeed < 0.60) {
-            score++;
-        }
-        if (allergenFree) {
-            score++;
-        }
-
+        score += netSpeed < 0.90 ? 1 : 0;
+        score += netSpeed < 0.60 ? 1 : 0;
+        
         this.netRating += score;
         return score;
     }

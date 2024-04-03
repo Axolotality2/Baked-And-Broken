@@ -1,4 +1,4 @@
-package q3aa2_tau_regaladorm.controllers;
+package BakeOrBreak.controllers;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,7 +16,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import q3aa2_tau_regaladorm.model.GameMngr;
+import BakeOrBreak.model.GameMngr;
 
 public class HomeScreenController implements Initializable {
 
@@ -29,7 +29,7 @@ public class HomeScreenController implements Initializable {
 
     @FXML
     private void startNewGame(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/q3aa2_tau_regaladorm/view/MainScreen.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/BakeOrBreak/view/MainScreen.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);
 
@@ -41,7 +41,7 @@ public class HomeScreenController implements Initializable {
 
     @FXML
     private void loadSavedGame(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/q3aa2_tau_regaladorm/view/MainScreen.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/BakeOrBreak/view/MainScreen.fxml"));
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         Scene scene = new Scene(root);
 
@@ -52,7 +52,7 @@ public class HomeScreenController implements Initializable {
 
     @FXML
     private void openSettings(ActionEvent event) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/q3aa2_tau_regaladorm/view/SettingsScreen.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/BakeOrBreak/view/SettingsScreen.fxml"));
         
         Parent root = loader.load();
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
