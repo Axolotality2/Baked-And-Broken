@@ -6,28 +6,24 @@ public class Step {
 
     private final Ingredient[] input, output;
     private final Workstation station;
-    private final String useMethod;
     private static final Step[] legalSteps = new Step[]{};
 
-    public Step(Ingredient[] input, Ingredient[] output, Workstation station, String useMethod) {
+    public Step(Ingredient[] input, Ingredient[] output, Workstation station) {
         this.input = input;
         this.output = output;
         this.station = station;
-        this.useMethod = useMethod;
     }
 
-    public Step(Ingredient[] input, Workstation station, String useMethod) {
+    public Step(Ingredient[] input, Workstation station) {
         this.input = input;
         this.output = null;
         this.station = station;
-        this.useMethod = useMethod;
     }
 
     public Step reference() {
         for (Step step : legalSteps) {
             if (Arrays.equals(getInput(), step.getInput())
-                    && station.equals(step.getStation())
-                    && useMethod.equals(step.getUseMethod())) {
+                    && station.equals(step.getStation())) {
                 return step;
             }
         }
@@ -45,10 +41,6 @@ public class Step {
 
     public Workstation getStation() {
         return station;
-    }
-
-    public String getUseMethod() {
-        return useMethod;
     }
 
     public static Step[] getLegalSteps() {

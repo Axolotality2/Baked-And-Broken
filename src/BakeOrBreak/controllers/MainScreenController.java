@@ -19,6 +19,8 @@ import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.util.Duration;
 import BakeOrBreak.model.*;
+import javafx.beans.property.DoubleProperty;
+import javafx.geometry.BoundingBox;
 
 public class MainScreenController implements Initializable {
 
@@ -33,8 +35,9 @@ public class MainScreenController implements Initializable {
     @FXML
     private ImageView clock;
 
-    private WorkstationNode station;
-    private ImageView activeItem;
+    private Countertop kitchenCounter;
+    private Countertop cashierCounter;
+    private WorkstationNode activeWorkstation;
     private GameMngr gameMngr = GameMngr.getGameManager();
 
     private class BaseIngredient extends ImageView {
@@ -54,6 +57,10 @@ public class MainScreenController implements Initializable {
                 dragIngredient.requestFocus();
             });
 
+        }
+
+        private Ingredient getIngredient() {
+            return ingredient;
         }
     }
 
@@ -76,7 +83,7 @@ public class MainScreenController implements Initializable {
             });
 
             this.addEventFilter(MouseEvent.MOUSE_PRESSED, (final MouseEvent mouseEvent) -> {
-                activeItem = (ImageView) iv;
+                this.layoutYProperty().unbind();
 
                 dragContext.mouseAnchorX = mouseEvent.getX();
                 dragContext.mouseAnchorY = mouseEvent.getY();
@@ -98,21 +105,30 @@ public class MainScreenController implements Initializable {
             });
 
             this.addEventFilter(MouseEvent.MOUSE_RELEASED, (final MouseEvent mouseEvent) -> {
-                for (ItemZone zone : ItemZone.getItemZones()) {
-                    Bounds itemBounds = this.localToScene(this.getBoundsInLocal());
-                    Bounds zoneBounds = zone.localToScene(zone.getBoundsInLocal());
-                    
-                    System.out.println("this" + itemBounds);
-                    System.out.println("zone" + zoneBounds);
-                    
-                    if (itemBounds.intersects(zoneBounds)) {
-                        System.out.println("found");
-                        zone.put(this);
-                    }
+                if (!checkForIntersections()) {
+                    iv.setTranslateX(dragContext.initialTranslateX);
+                    iv.setTranslateY(dragContext.initialTranslateY);
+                    checkForIntersections();
                 }
             });
         }
 
+        private boolean checkForIntersections() {
+            boolean validLocation = false;
+
+            for (ItemZone zone : ItemZone.getItemZones()) {
+                Bounds itemBounds = this.localToScene(this.getBoundsInLocal());
+                Bounds zoneBounds = zone.localToScene(zone.getBoundsInLocal());
+
+                if (zoneBounds.contains(itemBounds.getMinX(), itemBounds.getMaxY())
+                        && zoneBounds.contains(itemBounds.getMaxX(), itemBounds.getMaxY())) {
+                    zone.put(this);
+                    validLocation = true;
+                }
+            }
+            
+            return validLocation;
+        }
     }
 
     private static class DragContext {
@@ -136,44 +152,36 @@ public class MainScreenController implements Initializable {
 
     private class Countertop extends ItemZone {
 
+        private final double initCounterHeight;
+        private DoubleProperty finHeight;
+
         private Countertop() {
             itemZones.add(this);
+            initCounterHeight = this.getBoundsInLocal().getMaxY();
         }
-        
+
         @Override
         void put(DragIngredient ingredient) {
-            System.out.println("hold");
-            Pane parentPane = ((Pane)this.getParent());
-            Bounds targetBounds = parentPane.sceneToLocal(ingredient.localToScene(ingredient.getBoundsInLocal()));
-            
-            parentPane.getChildren().add(ingredient);
-            ingredient.setLayoutX(targetBounds.getMinX());
-            ingredient.setLayoutY(targetBounds.getMinY());
+            // MAJOR thanks to Christian Brandon Garcia of Charm '26 for this two-line solution
+            // I never would've figured it out without him
+            double offset = ingredient.getLayoutY() - this.getBoundsInParent().getMinY();
+            ingredient.layoutYProperty().bind(this.layoutYProperty().add(offset));
         }
     }
 
-    private abstract class DropZone extends ItemZone {
-
-        private final ArrayList<DragIngredient> inventory = new ArrayList<>();
-
-        protected ArrayList<DragIngredient> getInventory() {
-            return inventory;
-        }
-    }
-
-    private class CustomerNode extends DropZone {
+    private class CustomerNode extends ItemZone {
 
         Customer customer;
 
         private CustomerNode(Customer customer) {
             this.customer = customer;
 
-            this.setImage(new Image(getClass().getResourceAsStream("/q3aa2_tau_regaladorm/view/assets/customer.png")));
+            this.setImage(new Image(getClass().getResourceAsStream("/BakeOrBreak/view/assets/customer.png")));
             customerBox.getChildren().add(this);
 
             this.setLayoutX(-(this.getBoundsInParent().getWidth() + 3));
             this.setLayoutY(69);
-            
+
             itemZones.add(this);
         }
 
@@ -187,7 +195,7 @@ public class MainScreenController implements Initializable {
             pathTransition.setDuration(Duration.millis(1000));
             pathTransition.setNode(this);
             pathTransition.setPath(path);
-            
+
             pathTransition.play();
         }
 
@@ -196,7 +204,7 @@ public class MainScreenController implements Initializable {
         void put(DragIngredient ingredient) {
             try {
                 customer.rateProduct((Product) ingredient.ingredient);
-                ((Pane)ingredient.getParent()).getChildren().remove(ingredient);
+                ((Pane) ingredient.getParent()).getChildren().remove(ingredient);
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
@@ -204,39 +212,73 @@ public class MainScreenController implements Initializable {
 
     }
 
-    private class WorkstationNode extends DropZone {
+    private class WorkstationNode extends ItemZone {
+
+        private Workstation workstation;
+
+        private WorkstationNode(Workstation workstation) {
+            this.setId("station-" + workstation.getName());
+            this.setImage(workstation.getImage());
+            this.workstation = workstation;
+
+            itemZones.add(this);
+
+            this.addEventHandler(MouseEvent.MOUSE_PRESSED, (final MouseEvent mouseEvent) -> {
+                try {
+                    workstation.use();
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+            });
+        }
 
         @Override
         void put(DragIngredient ingredient) {
-            this.getInventory().add(ingredient);
-            ((Pane)ingredient.getParent()).getChildren().remove(ingredient);
+            workstation.insert(ingredient.ingredient);
+            ((Pane) ingredient.getParent()).getChildren().remove(ingredient);
         }
-
     }
 
+    private void setWorkstation(String name) {
+        Workstation workstation = new Workstation(name);
+        WorkstationNode bowlView = new WorkstationNode(workstation);
+
+        double centerPlacement = 3 * Math.round((kitchenCounter.getBoundsInParent().getWidth() - workstation.getImage().getWidth()) / 6);
+        double heightPlacement = kitchenCounter.getBoundsInParent().getHeight() - 9;
+
+        AnchorPane.setLeftAnchor(bowlView, centerPlacement);
+        AnchorPane.setBottomAnchor(bowlView, heightPlacement);
+        counterPane.getChildren().add(bowlView);
+    }
+
+    private void setWorkstation(int index) {
+        setWorkstation(Workstation.getWorkstations().get(index).getName());
+    }
+    
     private void initCounters() {
         // Setup kitchen counter
-        Countertop kitchenCounter = new Countertop();
+        kitchenCounter = new Countertop();
         kitchenCounter.setImage(new Image(getClass().getResourceAsStream("/BakeOrBreak/view/assets/kitchenTable.png")));
-        kitchenCounter.setId("counter");
-        
+        kitchenCounter.setId("kitchenCounter");
+
         AnchorPane.setBottomAnchor(kitchenCounter, 0d);
         counterPane.getChildren().add(kitchenCounter);
         
         // Setup cashier counter
+        cashierCounter = new Countertop();
+        cashierCounter.setImage(new Image(getClass().getResourceAsStream("/BakeOrBreak/view/assets/cashierTable.png")));
+        cashierCounter.setId("cashierCounter");
         
+        AnchorPane.setBottomAnchor(cashierCounter, 3d);
+        AnchorPane.setLeftAnchor(cashierCounter, 3d);
+        customerBox.getChildren().add(cashierCounter);
     }
-    
-    private void initWorkstation() {
-        WorkstationNode station = new WorkstationNode();
-        station.setImage();
-    }
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-
         dragPane.setPickOnBounds(false);
         initCounters();
+        setWorkstation("bowl");
 
         ArrayList<BaseIngredient> bases = new ArrayList<>();
         Ingredient[] ingredients = new Ingredient[]{
@@ -255,13 +297,13 @@ public class MainScreenController implements Initializable {
 
         pantry.getChildren().addAll(bases);
 
-//        Customer c = new Customer(new ArrayList<>(), new Ingredient[2]);
-//
-//        CustomerNode cn = new CustomerNode(c);
-//
-//        clock.setOnMouseClicked((final MouseEvent e) -> {
-//            cn.enter();
-//        });
+        Customer c = new Customer(new ArrayList<>(), new Ingredient[2]);
+
+        CustomerNode cn = new CustomerNode(c);
+
+        clock.setOnMouseClicked((final MouseEvent e) -> {
+            cn.enter();
+        });
     }
 
 }
