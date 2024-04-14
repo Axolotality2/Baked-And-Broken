@@ -8,13 +8,11 @@ public class Ingredient {
     private final Ingredient[] allergens;
     private final String name;
     private final Image image;
-    private final Step[] steps;
     private final boolean isFood;
     
     // best for raw ingredients   
     public Ingredient (String name, boolean isFood, boolean isAllergen) {
         this.name = name;
-        this.steps = new Step[0];
         this.isFood = isFood;
         this.image = new Image(getClass().getResourceAsStream("/BakeOrBreak/view/assets/food/" + name + ".png"));
         
@@ -24,9 +22,8 @@ public class Ingredient {
             this.allergens = new Ingredient[0];
     }
     
-    public Ingredient (String name, Step[] steps, boolean isFood, Ingredient[] allergens) {
+    public Ingredient (String name, boolean isFood, Ingredient[] allergens) {
         this.name = name;
-        this.steps = steps;
         this.isFood = isFood;
         this.image = new Image(getClass().getResourceAsStream("/q3aa2_tau_regaladorm/view/assets/" + name + ".png"));
         this.allergens = allergens;
@@ -48,11 +45,7 @@ public class Ingredient {
         return image;
     }
 
-    public Step[] getSteps() {
-        return steps;
-    }
-
-    public boolean isIsFood() {
+    public boolean isFood() {
         return isFood;
     }
 }

@@ -41,7 +41,7 @@
                     <items>
                       <AnchorPane id="kitchenRoom" fx:id="counterPane" minHeight="150.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                            <children>
-                              <Label fx:id="objective" layoutX="12.0" layoutY="-3.0" text="make a cake" />
+                              <Label fx:id="objective" layoutX="12.0" layoutY="-3.0" />
                               <FlowPane fx:id="stationPane" hgap="3.0" layoutX="6.0" layoutY="21.0" prefHeight="18.0" prefWidth="60.0">
                                  <children>
                                     <Button mnemonicParsing="false" prefHeight="18.0" prefWidth="18.0" styleClass="iconButton">

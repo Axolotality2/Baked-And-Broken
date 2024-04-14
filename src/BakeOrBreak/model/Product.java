@@ -9,8 +9,14 @@ public class Product extends Ingredient{
     private final int complexity;
     private final int prepTimeSec;
 
-    public Product(String name, Step[] steps, boolean isFood, Ingredient[] allergens, int complexity) {
-        super(name, steps, isFood, allergens);
+    public Product(Ingredient ingredient) {
+        super(ingredient.getName(), ingredient.isFood(), ingredient.getAllergens());
+        this.complexity = 0;
+        this.prepTimeSec = 0;
+    }
+    
+    public Product(String name, boolean isFood, Ingredient[] allergens, int complexity) {
+        super(name, isFood, allergens);
         
         this.complexity = complexity;
         this.prepTimeSec = BASE_TIME + TIME_ADDITION * complexity;
@@ -39,7 +45,7 @@ public class Product extends Ingredient{
     }
 
     public boolean isFood() {
-        return isIsFood();
+        return isFood();
     }
 
     public int getComplexity() {

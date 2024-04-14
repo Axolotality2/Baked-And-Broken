@@ -20,7 +20,13 @@ import javafx.scene.shape.Path;
 import javafx.util.Duration;
 import BakeOrBreak.model.*;
 import javafx.beans.property.DoubleProperty;
-import javafx.geometry.BoundingBox;
+import javafx.scene.control.Label;
+import com.google.gson.Gson;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
 
 public class MainScreenController implements Initializable {
 
@@ -34,7 +40,10 @@ public class MainScreenController implements Initializable {
     private AnchorPane counterPane;
     @FXML
     private ImageView clock;
+    @FXML
+    private Label objective;
 
+    private final String ingredientsFilepath = "/BakeOrBreak/constants/ingredients.txt";
     private Countertop kitchenCounter;
     private Countertop cashierCounter;
     private WorkstationNode activeWorkstation;
@@ -115,9 +124,9 @@ public class MainScreenController implements Initializable {
 
         private boolean checkForIntersections() {
             boolean validLocation = false;
-
+            Bounds itemBounds = this.localToScene(this.getBoundsInLocal());
+            
             for (ItemZone zone : ItemZone.getItemZones()) {
-                Bounds itemBounds = this.localToScene(this.getBoundsInLocal());
                 Bounds zoneBounds = zone.localToScene(zone.getBoundsInLocal());
 
                 if (zoneBounds.contains(itemBounds.getMinX(), itemBounds.getMaxY())
@@ -126,7 +135,7 @@ public class MainScreenController implements Initializable {
                     validLocation = true;
                 }
             }
-            
+
             return validLocation;
         }
     }
@@ -187,6 +196,8 @@ public class MainScreenController implements Initializable {
 
         // enter
         private void enter() {
+            objective.setText("make a " + customer.getOrder().get(0).getName());
+
             PathTransition pathTransition = new PathTransition();
             Path path = new Path();
             path.getElements().add(new MoveTo(0, 48));
@@ -254,7 +265,7 @@ public class MainScreenController implements Initializable {
     private void setWorkstation(int index) {
         setWorkstation(Workstation.getWorkstations().get(index).getName());
     }
-    
+
     private void initCounters() {
         // Setup kitchen counter
         kitchenCounter = new Countertop();
@@ -263,47 +274,43 @@ public class MainScreenController implements Initializable {
 
         AnchorPane.setBottomAnchor(kitchenCounter, 0d);
         counterPane.getChildren().add(kitchenCounter);
-        
+
         // Setup cashier counter
         cashierCounter = new Countertop();
         cashierCounter.setImage(new Image(getClass().getResourceAsStream("/BakeOrBreak/view/assets/cashierTable.png")));
         cashierCounter.setId("cashierCounter");
-        
+
         AnchorPane.setBottomAnchor(cashierCounter, 3d);
         AnchorPane.setLeftAnchor(cashierCounter, 3d);
         customerBox.getChildren().add(cashierCounter);
     }
 
+    private void initBases() throws FileNotFoundException {
+        final File ingFile = new File(ingredientsFilepath);
+        final Scanner scanner = new Scanner(ingFile);
+        final Gson gson = new Gson();
+        String content = "";
+        Type listType = new TypeToken<ArrayList<Ingredient>>() {}.getType();
+        
+        while(scanner.hasNextLine())
+            content += scanner.nextLine();
+        
+        ArrayList<BaseIngredient> bases = gson.fromJson(content, listType);
+        
+        
+
+        pantry.getChildren().addAll(bases);
+    }
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         dragPane.setPickOnBounds(false);
         initCounters();
-        setWorkstation("bowl");
-
-        ArrayList<BaseIngredient> bases = new ArrayList<>();
-        Ingredient[] ingredients = new Ingredient[]{
-            new Ingredient("flour", true, false),
-            new Ingredient("milk", true, false),
-            new Ingredient("sugar", true, false),
-            new Ingredient("cheese", true, false),
-            new Ingredient("butter", true, false),
-            new Ingredient("yeast", true, false),
-            new Ingredient("egg", true, false)
-        };
-
-        for (Ingredient ing : ingredients) {
-            bases.add(new BaseIngredient(ing));
+        try {
+            initBases();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
-
-        pantry.getChildren().addAll(bases);
-
-        Customer c = new Customer(new ArrayList<>(), new Ingredient[2]);
-
-        CustomerNode cn = new CustomerNode(c);
-
-        clock.setOnMouseClicked((final MouseEvent e) -> {
-            cn.enter();
-        });
+        setWorkstation("bowl");
     }
-
 }
