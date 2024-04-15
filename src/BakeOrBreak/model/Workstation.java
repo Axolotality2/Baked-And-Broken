@@ -3,23 +3,37 @@ package BakeOrBreak.model;
 import java.util.ArrayList;
 import java.util.Arrays;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 
-public class Workstation {
+public class Workstation extends ItemReceiver {
 
     private static ArrayList<Workstation> workstations = new ArrayList<>();
-    private String name;
-    private Image image;
-    private ArrayList<Ingredient> contents;
+    private final String name;
+    private transient Image image;
+    private ArrayList<DragIngredient> contents;
 
     public Workstation(String name) {
         this.name = name;
         this.image = new Image(getClass().getResourceAsStream("/BakeOrBreak/view/assets/" + name + ".png"));
         this.contents = new ArrayList<>();
+        this.setId("station-" + name);
+        this.setImage(image);
+
         workstations.add(this);
+        itemZones.add(this);
+
+        this.addEventHandler(MouseEvent.MOUSE_PRESSED, (final MouseEvent mouseEvent) -> {
+            try {
+                use();
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        });
     }
 
     public void use() throws Exception {
-        Step checkedStep = new Step((Ingredient[]) contents.toArray(), this).reference();
+        Step checkedStep = new Step((DragIngredient[]) contents.toArray(), this).reference();
         if (checkedStep == null) {
             throw new Exception();
         }
@@ -27,24 +41,26 @@ public class Workstation {
         this.contents = new ArrayList<>(Arrays.asList(checkedStep.getOutput()));
     }
 
-    public void insert(Ingredient ingredient) {
+    public void insert(DragIngredient ingredient) {
         contents.add(ingredient);
     }
 
-    public Ingredient[] releaseProducts() {
-        return (Ingredient[]) contents.toArray();
+    public DragIngredient[] releaseProducts() {
+        return (DragIngredient[]) contents.toArray();
+    }
+
+    @Override
+    void put(DragIngredient ingredient) {
+        insert(ingredient);
+        ((Pane) ingredient.getParent()).getChildren().remove(ingredient);
     }
 
     public String getName() {
         return name;
     }
 
-    public ArrayList<Ingredient> getContents() {
+    public ArrayList<DragIngredient> getContents() {
         return contents;
-    }
-
-    public Image getImage() {
-        return image;
     }
 
     public static ArrayList<Workstation> getWorkstations() {
