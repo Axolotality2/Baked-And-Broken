@@ -3,12 +3,13 @@ package BakeOrBreak.model;
 import java.util.ArrayList;
 import java.util.Arrays;
 import javafx.scene.image.Image;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 
 public class Workstation extends ItemReceiver {
 
-    private static ArrayList<Workstation> workstations = new ArrayList<>();
+    private static ArrayList<Workstation> workstations;
     private final String name;
     private transient Image image;
     private ArrayList<DragIngredient> contents;
@@ -20,32 +21,31 @@ public class Workstation extends ItemReceiver {
         this.setId("station-" + name);
         this.setImage(image);
 
-        workstations.add(this);
         itemZones.add(this);
 
         this.addEventHandler(MouseEvent.MOUSE_PRESSED, (final MouseEvent mouseEvent) -> {
-            try {
-                use();
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
+            if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
+                if (mouseEvent.getClickCount() == 2) {
+                    releaseContents();
+                }
             }
         });
     }
 
-    public void use() throws Exception {
+    public ArrayList<DragIngredient> use() throws Exception {
         Step checkedStep = new Step((DragIngredient[]) contents.toArray(), this).reference();
         if (checkedStep == null) {
             throw new Exception();
         }
 
-        this.contents = new ArrayList<>(Arrays.asList(checkedStep.getOutput()));
+        return (this.contents = new ArrayList<>(Arrays.asList(checkedStep.getOutput())));
     }
 
     public void insert(DragIngredient ingredient) {
         contents.add(ingredient);
     }
 
-    public DragIngredient[] releaseProducts() {
+    public DragIngredient[] releaseContents() {
         return (DragIngredient[]) contents.toArray();
     }
 

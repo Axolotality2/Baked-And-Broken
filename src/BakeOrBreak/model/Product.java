@@ -9,14 +9,16 @@ public class Product extends DragIngredient {
     private final int complexity;
     private final int prepTimeSec;
 
+    // Used for converting intermediates into complete products (i.e. Step)
     public Product(DragIngredient ingredient) {
-        super(ingredient.getName(), ingredient.isFood(), ingredient.getAllergens());
+        super(ingredient.getIngredientData());
         this.complexity = 0;
         this.prepTimeSec = 0;
     }
     
-    public Product(String name, boolean isFood, BaseIngredient[] allergens, int complexity) {
-        super(name, isFood, allergens);
+    // Used for selecting products (i.e. Customer)
+    public Product(IngredientData ingredientData, int complexity) {
+        super(ingredientData);
         this.complexity = complexity;
         this.prepTimeSec = BASE_TIME + TIME_ADDITION * complexity;
     }

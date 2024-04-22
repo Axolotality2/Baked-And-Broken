@@ -16,19 +16,19 @@ public class Difficulty {
         difficulties++;
     }
 
-    public WeightedDist<Integer> getComplexityTable() {
-        return complexityTable;
+    public int getRandComplexity() {
+        return complexityTable.pickRandom();
     }
 
-    public WeightedDist<Integer> getOrderSizeTable() {
-        return orderSizeTable;
+    public int getRandOrderSize() {
+        return orderSizeTable.pickRandom();
     }
 
-    public WeightedDist<Integer> getAllergyTable() {
-        return allergyTable;
+    public int getRandAllergyCount() {
+        return allergyTable.pickRandom();
     }
     
-    public WeightedDist<Integer> getCustomerCountTable() {
-        return customerCountTable;
+    public int getRandCustomerCount() {
+        return customerCountTable.pickRandom();
     }
 }

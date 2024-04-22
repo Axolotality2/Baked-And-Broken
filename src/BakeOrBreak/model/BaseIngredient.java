@@ -12,36 +12,23 @@ import javafx.scene.layout.Pane;
 
 public class BaseIngredient extends ImageView {
 
-    private static WeightedDist<BaseIngredient> ALLERGENS;
+    private static WeightedDist<String> ALLERGENS;
     private static BaseIngredient[] INGREDIENTS;
+    
+    private final IngredientData ingredientData;
 
-    private final String name;
-    private final boolean isFood;
-    private final boolean isAllergen;
-
-    public BaseIngredient(String name, boolean isFood, boolean isAllergen) {
-        this.name = name;
-        this.isFood = isFood;
-        this.isAllergen = isAllergen;
-
-        this.setImage(new Image(getClass().getResourceAsStream("/BakeOrBreak/view/assets/food/" + name + ".png")));
-        this.setId("base-" + name);
+    public BaseIngredient(IngredientData data) {
+        this.ingredientData = data;
+        this.setImage(new Image(getClass().getResourceAsStream("/BakeOrBreak/view/assets/food/" + data.getName() + ".png")));
+        this.setId("BASE-" + data.getName());
     }
 
-    public static WeightedDist<BaseIngredient> getALLERGENS() {
+    public IngredientData getIngredientData() {
+        return ingredientData;
+    }
+    
+    public static WeightedDist<String> getALLERGENS() {
         return ALLERGENS;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public boolean isFood() {
-        return isFood;
-    }
-
-    public boolean isAllergen() {
-        return isAllergen;
     }
 
     public static void initINGREDIENTS(String filepath) throws FileNotFoundException, IOException {
@@ -54,10 +41,10 @@ public class BaseIngredient extends ImageView {
         }
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        JSONIngredient[] jsonIngs = gson.fromJson(contents, JSONIngredient[].class);
+        IngredientData[] jsonIngs = gson.fromJson(contents, IngredientData[].class);
         BaseIngredient[] baseIngs = new BaseIngredient[jsonIngs.length];
-        for (i = 0; i < jsonIngs.length; i++) {
-            baseIngs[i] = jsonIngs[i].toBaseIngredient();
+        for (int j = 0; j < jsonIngs.length; j++) {
+            baseIngs[j] = new BaseIngredient(new IngredientData(jsonIngs[j]));
         }
 
         INGREDIENTS = baseIngs;

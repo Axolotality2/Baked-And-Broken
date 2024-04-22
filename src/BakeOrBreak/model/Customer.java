@@ -7,23 +7,43 @@ import javafx.scene.layout.Pane;
 
 public class Customer extends ItemReceiver {
 
-    private final ArrayList<Product> order;
-    private final BaseIngredient[] allergies;
+    private final ArrayList<IngredientData> order;
+    private final String[] allergies;
     private final long orderTime;
     private long prepTime, leaveTime;
     private int netRating, netSpeed;
     private static GameMngr gameManager = GameMngr.getGameManager();
 
+    public Customer(ArrayList<Product> order, String[] allergies, long leaveTime) {
+        this.order = new ArrayList<>();
+        this.allergies = allergies;
+        this.leaveTime = leaveTime;
+        orderTime = GameMngr.getGameManager().getLevelMngr().getTime();
+
+        for (Product p : order) {
+            this.order.add(p.getIngredientData());
+        }
+    }
+
+    public Customer(ArrayList<Product> order, String[] allergies) {
+        this(order, allergies, 0);
+        for (Product p : order) {
+            prepTime += p.getPrepTime();
+        }
+
+        leaveTime = orderTime + prepTime;
+    }
+
     public Customer(Difficulty d) {
         order = new ArrayList<>();
         orderTime = GameMngr.getGameManager().getLevelMngr().getTime();
-        allergies = BaseIngredient.getALLERGENS().pickRandom(d.getAllergyTable().pickRandom());
+        allergies = BaseIngredient.getALLERGENS().pickRandom(d.getRandAllergyCount()); 
 
-        for (int i = 0; i < d.getOrderSizeTable().pickRandom(); i++) {
-            Product[] orderable = Product.filterByComplexity(d.getComplexityTable().pickRandom());
+        for (int i = 0; i < d.getRandOrderSize(); i++) {
+            Product[] orderable = Product.filterByComplexity(d.getRandComplexity());
             int index = (int) (Math.random() * (orderable.length - 1));
 
-            order.add(orderable[index]);
+            order.add(orderable[index].getIngredientData());
             prepTime += orderable[index].getPrepTime();
         }
 
@@ -33,37 +53,17 @@ public class Customer extends ItemReceiver {
         itemZones.add(this);
     }
 
-    public Customer(ArrayList<Product> order, BaseIngredient[] allergies, long leaveTime) {
-        this.order = order;
-        this.allergies = allergies;
-        this.leaveTime = leaveTime;
-        orderTime = GameMngr.getGameManager().getLevelMngr().getTime();
-    }
-
-    public Customer(ArrayList<Product> order, BaseIngredient[] allergies) {
-        this.order = order;
-        this.allergies = allergies;
-        orderTime = gameManager.getLevelMngr().getTime();
-
-        for (Product p : order) {
-            prepTime += p.getPrepTime();
-        }
-
-        leaveTime = orderTime + prepTime;
-    }
-
     public int rateProduct(Product product) throws Exception {
         long currentTime = GameMngr.getGameManager().getLevelMngr().getTime();
         int score = 2;
         netSpeed = (int) (100 * (currentTime - orderTime) / prepTime);
 
-        if (!order.remove(product)) {
+        if (!order.remove(product.getIngredientData())) {
             order.remove(0);
         }
 
-        for (BaseIngredient allergy : allergies) // Test for allergies
-        {
-            score = Arrays.asList(product.getAllergens()).contains(allergy) ? 2 : 3;
+        for (String allergy : allergies) { // Test for allergies
+            score = Arrays.asList(product.getIngredientData().getAllergens()).contains(allergy) ? 2 : 3;
         }
 
         score += netSpeed < 0.90 ? 1 : 0;
@@ -95,7 +95,7 @@ public class Customer extends ItemReceiver {
         return leaveTime;
     }
 
-    public ArrayList<Product> getOrder() {
+    public ArrayList<IngredientData> getOrder() {
         return order;
     }
 

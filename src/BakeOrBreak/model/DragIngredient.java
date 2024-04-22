@@ -2,36 +2,26 @@ package BakeOrBreak.model;
 
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 
 public class DragIngredient extends Group {
 
     private final double bottomlineOffset = 9;
-    protected String name;
-    protected transient Image image;
-    protected boolean isFood;
-    protected BaseIngredient[] allergens;
+    private IngredientData ingredientData;
 
     public DragIngredient(BaseIngredient base) {
-        this(base.getName(), 
-                base.isFood(), 
-                base.isAllergen() ? new BaseIngredient[]{base} : new BaseIngredient[]{});
-        this.setId(name);
-
-        ImageView iv = this.addImageView(base.getImage(), 
-                base.localToScene(base.getBoundsInLocal()).getMinX(), 
-                base.localToScene(base.getBoundsInLocal()).getMinY());
-        this.addMouseHandlers(iv);
+        this(base.getIngredientData());
+        this.setId(ingredientData.getName());
+        
+        Bounds origPos = base.localToScene(base.getBoundsInLocal());
+        
+        this.showAt(origPos.getMinX(), origPos.getMinY());
     }
 
-    public DragIngredient(String name, boolean isFood, BaseIngredient[] allergens) {
-        this.name = name;
-        this.isFood = isFood;
-        this.allergens = allergens;
-        this.image = new Image(getClass().getResourceAsStream("/BakeOrBreak/view/assets/food/" + name + ".png"));
-        this.setId(name);
+    public DragIngredient(IngredientData ingredientData) {
+        this.ingredientData = ingredientData;
+        this.setId(ingredientData.getName());
     }
 
     private boolean checkForIntersections() {
@@ -51,16 +41,12 @@ public class DragIngredient extends Group {
         return validLocation;
     }
 
-    private ImageView addImageView(Image i, double x, double y) {
-        ImageView iv = new ImageView(i);
+    private void showAt(double x, double y) {
+        ImageView iv = new ImageView(ingredientData.getImg());
         this.setLayoutX(x);
         this.setLayoutY(y);
         this.getChildren().add(iv);
-        
-        return iv;
-    }
 
-    private void addMouseHandlers(ImageView iv) {
         DragContext dragContext = new DragContext();
 
         this.addEventFilter(MouseEvent.ANY, (final MouseEvent mouseEvent) -> {
@@ -106,19 +92,7 @@ public class DragIngredient extends Group {
         public double initialTranslateY;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public Image getImage() {
-        return image;
-    }
-
-    public boolean isFood() {
-        return isFood;
-    }
-
-    public BaseIngredient[] getAllergens() {
-        return allergens;
+    public IngredientData getIngredientData() {
+        return ingredientData;
     }
 }

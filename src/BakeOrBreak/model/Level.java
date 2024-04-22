@@ -15,7 +15,7 @@ public class Level {
         this.difficulty = difficulty;
         this.customers = new ArrayList<>();
         
-        for (int i = 0; i < difficulty.getCustomerCountTable().pickRandom(); i++)
+        for (int i = 0; i < difficulty.getRandCustomerCount(); i++)
             addCustomer();
     }
     
