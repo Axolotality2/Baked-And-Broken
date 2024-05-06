@@ -1,5 +1,6 @@
-.cashier-pane {
-    -fx-background-image: url('assets/cashierWindow.png');
+HBox {
+    -fx-background-image: url('assets/gameBorder.png');
+    -fx-background-repeat: no-repeat;
 }
 
 .kitchen-pane {

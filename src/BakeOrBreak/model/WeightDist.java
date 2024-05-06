@@ -1,35 +1,24 @@
 package BakeOrBreak.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
 
-public class WeightedDist<T> {
+public class WeightDist<T> {
 
-    private HashMap<T, Double> table;
+    private final HashMap<T, Double> table = new HashMap<>();
     private double weightSum;
     private final Random generator = new Random();
     
+    public WeightDist() {
+        weightSum = 0d;
+    }
+    
     public boolean addEntry(T entry, double weight) {
         weightSum += weight;
-        return table.putIfAbsent(entry, weightSum) == null;
+        return table.put(entry, weightSum) == null;
     }
     
-    public boolean editEntry(T entry, double weight) {
-        if (table.containsKey(entry)) {
-            weightSum -= table.get(entry) - weight;
-            table.put(entry, weightSum);
-        }
-        return table.containsKey(entry);
-    }
-    
-    public boolean deleteEntry(T entry) {
-        if (table.containsKey(entry)) {
-            weightSum -= table.get(entry);
-            table.remove(entry);
-        }
-        return table.containsKey(entry);
-    }
-
     public T pickRandom() {
         double reference = generator.nextDouble() * weightSum;
 
@@ -48,5 +37,9 @@ public class WeightedDist<T> {
             randomArr[i] = pickRandom();
         
         return (T[]) randomArr;
+    }
+    
+    public ArrayList<T> getValues() {
+        return new ArrayList<>(table.keySet());
     }
 }

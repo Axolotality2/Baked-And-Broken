@@ -4,17 +4,17 @@ import java.util.Arrays;
 
 public class Step {
 
-    private final DragIngredient[] input, output;
+    private final IngredientData[] input, output;
     private final Workstation station;
     private static final Step[] legalSteps = new Step[]{};
 
-    public Step(DragIngredient[] input, DragIngredient[] output, Workstation station) {
+    public Step(IngredientData[] input, IngredientData[] output, Workstation station) {
         this.input = input;
         this.output = output;
         this.station = station;
     }
 
-    public Step(DragIngredient[] input, Workstation station) {
+    public Step(IngredientData[] input, Workstation station) {
         this.input = input;
         this.output = null;
         this.station = station;
@@ -31,11 +31,11 @@ public class Step {
         return null;
     }
 
-    public DragIngredient[] getInput() {
+    public IngredientData[] getInput() {
         return input;
     }
 
-    public DragIngredient[] getOutput() {
+    public IngredientData[] getOutput() {
         return output;
     }
 

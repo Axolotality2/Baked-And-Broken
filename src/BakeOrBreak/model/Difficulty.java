@@ -1,34 +1,38 @@
 package BakeOrBreak.model;
 
 public class Difficulty {
-
-    private final WeightedDist<Integer> complexityTable, orderSizeTable, allergyTable, customerCountTable;
-    private static int difficulties = 0;
-    public static final Difficulty EASY = null; 
-    public static final Difficulty MEDIUM = null;
-    public static final Difficulty HARD = null;
-
-    public Difficulty(WeightedDist<Integer> c, WeightedDist<Integer> o, WeightedDist<Integer> a, WeightedDist<Integer> cc) {
-        this.complexityTable = c;
-        this.orderSizeTable = o;
-        this.allergyTable = a;
-        this.customerCountTable = cc;
-        difficulties++;
-    }
-
-    public int getRandComplexity() {
-        return complexityTable.pickRandom();
-    }
-
-    public int getRandOrderSize() {
-        return orderSizeTable.pickRandom();
-    }
-
-    public int getRandAllergyCount() {
-        return allergyTable.pickRandom();
+    
+    private WeightDist<Integer> complexity;
+    private WeightDist<Integer> orderSize;
+    private WeightDist<Integer> allergyCount;
+    
+    public Difficulty(int difficulty) {
+        complexity = new WeightDist<>();
+        orderSize = new WeightDist<>();
+        allergyCount = new WeightDist<>();
+        
+        for (int i = 1; i <= difficulty * 10; i++) {
+            complexity.addEntry(i, i);
+        }
+        
+        for (int i = 1; i <= difficulty; i++) {
+            orderSize.addEntry(i, difficulty - i);
+        }
+        
+        for (int i = 1; i <= difficulty; i++) {
+            allergyCount.addEntry(i, difficulty - i);
+        }
     }
     
-    public int getRandCustomerCount() {
-        return customerCountTable.pickRandom();
+    public int getComplexity() {
+        return complexity.pickRandom();
+    }
+    
+    public int getOrderSize() {
+        return orderSize.pickRandom();
+    }
+    
+    public int getAllergyCount() {
+        return allergyCount.pickRandom();
     }
 }

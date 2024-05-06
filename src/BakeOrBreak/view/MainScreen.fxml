@@ -16,12 +16,12 @@
 
 <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="270.0" prefWidth="360.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BakeOrBreak.controllers.MainScreenController">
    <children>
-      <HBox prefHeight="100.0" prefWidth="200.0" spacing="3.0">
+      <HBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="270.0" prefWidth="360.0" spacing="9.0">
          <StackPane.margin>
-            <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+            <Insets />
          </StackPane.margin>
          <children>
-            <AnchorPane fx:id="customerBox" prefHeight="264.0" prefWidth="117.0" styleClass="cashier-pane">
+            <AnchorPane fx:id="customerBox" minHeight="-Infinity" minWidth="-Infinity" prefHeight="258.0" prefWidth="111.0" styleClass="customer-box">
                <children>
                   <ImageView fx:id="clock" layoutX="60.0" layoutY="21.0">
                      <image>
@@ -29,22 +29,25 @@
                      </image>
                   </ImageView>
                </children>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
             </AnchorPane>
-            <StackPane prefHeight="150.0" prefWidth="200.0">
+            <StackPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="258.0" prefWidth="228.0">
                <children>
-                  <ImageView fitHeight="264.0" fitWidth="234.0">
-                     <image>
-                        <Image url="@assets/kitchenWindow.png" />
-                     </image>
-                  </ImageView>
-                  <SplitPane fx:id="kitchenBox" dividerPositions="0.9689922480620154" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" styleClass="kitchen-pane">
+                  <SplitPane fx:id="kitchenBox" dividerPositions="0.9689922480620154" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" styleClass="kitchen-pane">
                     <items>
                       <AnchorPane id="kitchenRoom" fx:id="counterPane" minHeight="150.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                            <children>
-                              <Label fx:id="objective" layoutX="12.0" layoutY="-3.0" />
+                              <ImageView fx:id="taskbar" fitHeight="150.0" fitWidth="230.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@assets/taskbar.png" />
+                                 </image>
+                              </ImageView>
+                              <Label fx:id="objective" layoutX="12.0" layoutY="-3.0" prefWidth="200.0" />
                               <FlowPane fx:id="stationPane" hgap="3.0" layoutX="6.0" layoutY="21.0" prefHeight="18.0" prefWidth="60.0">
                                  <children>
-                                    <Button mnemonicParsing="false" prefHeight="18.0" prefWidth="18.0" styleClass="iconButton">
+                                    <Button fx:id="bowl_btn" mnemonicParsing="false" onAction="#setWorkstation" prefHeight="18.0" prefWidth="18.0" styleClass="iconButton">
                                        <graphic>
                                           <ImageView>
                                              <image>
@@ -53,7 +56,7 @@
                                           </ImageView>
                                        </graphic>
                                     </Button>
-                                    <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="18.0" styleClass="iconButton">
+                                    <Button fx:id="blender_btn" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#setWorkstation" prefHeight="18.0" prefWidth="18.0" styleClass="iconButton">
                                        <graphic>
                                           <ImageView>
                                              <image>
@@ -62,7 +65,7 @@
                                           </ImageView>
                                        </graphic>
                                     </Button>
-                                    <Button layoutX="31.0" layoutY="10.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="18.0" styleClass="iconButton">
+                                    <Button fx:id="oven_btn" layoutX="31.0" layoutY="10.0" mnemonicParsing="false" onAction="#setWorkstation" prefHeight="18.0" prefWidth="18.0" styleClass="iconButton">
                                        <graphic>
                                           <ImageView>
                                              <image>
@@ -85,12 +88,18 @@
                         </ScrollPane>
                     </items>
                      <StackPane.margin>
-                        <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+                        <Insets bottom="6.0" left="6.0" right="6.0" top="6.0" />
                      </StackPane.margin>
                   </SplitPane>
                </children>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
             </StackPane>
          </children>
+         <padding>
+            <Insets bottom="6.0" left="6.0" right="6.0" top="6.0" />
+         </padding>
       </HBox>
       <Pane fx:id="dragPane" prefHeight="200.0" prefWidth="200.0" />
    </children>

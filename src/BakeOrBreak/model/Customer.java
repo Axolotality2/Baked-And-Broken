@@ -10,6 +10,7 @@ public class Customer extends ItemReceiver {
     private final ArrayList<IngredientData> order;
     private final String[] allergies;
     private final long orderTime;
+    private LevelData levelData;
     private long prepTime, leaveTime;
     private int netRating, netSpeed;
     private static GameMngr gameManager = GameMngr.getGameManager();
@@ -23,31 +24,34 @@ public class Customer extends ItemReceiver {
         for (Product p : order) {
             this.order.add(p.getIngredientData());
         }
+
+        this.setImage(new Image(getClass().getResourceAsStream("/BakeOrBreak/view/assets/customer.png")));
+        itemZones.add(this);
     }
 
     public Customer(ArrayList<Product> order, String[] allergies) {
         this(order, allergies, 0);
         for (Product p : order) {
-            prepTime += p.getPrepTime();
+            prepTime += p.getIngredientData().getPrepTimeSec();
         }
 
         leaveTime = orderTime + prepTime;
+
+        this.setImage(new Image(getClass().getResourceAsStream("/BakeOrBreak/view/assets/customer.png")));
+        itemZones.add(this);
     }
 
     public Customer(Difficulty d) {
+        Product[] orderArr = Product.getProduct(d.getOrderSize());
         order = new ArrayList<>();
         orderTime = GameMngr.getGameManager().getLevelMngr().getTime();
-        allergies = BaseIngredient.getALLERGENS().pickRandom(d.getRandAllergyCount()); 
+        allergies = BaseIngredient.getAllergen(d.getAllergyCount());
+        leaveTime = orderTime;
 
-        for (int i = 0; i < d.getRandOrderSize(); i++) {
-            Product[] orderable = Product.filterByComplexity(d.getRandComplexity());
-            int index = (int) (Math.random() * (orderable.length - 1));
-
-            order.add(orderable[index].getIngredientData());
-            prepTime += orderable[index].getPrepTime();
+        for (Product p : orderArr) {
+            leaveTime += p.getIngredientData().getPrepTimeSec();
+            order.add(p.getIngredientData());
         }
-
-        leaveTime = orderTime + prepTime;
 
         this.setImage(new Image(getClass().getResourceAsStream("/BakeOrBreak/view/assets/customer.png")));
         itemZones.add(this);
@@ -79,7 +83,7 @@ public class Customer extends ItemReceiver {
             rateProduct((Product) ingredient);
             ((Pane) ingredient.getParent()).getChildren().remove(ingredient);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            ingredient.returnToOriginalPos();
         }
     }
 

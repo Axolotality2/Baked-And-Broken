@@ -4,27 +4,32 @@ import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Pane;
 
 public class DragIngredient extends Group {
 
+    private static Pane dragPane;
     private final double bottomlineOffset = 9;
     private IngredientData ingredientData;
+    private DragContext dragContext;
 
     public DragIngredient(BaseIngredient base) {
         this(base.getIngredientData());
         this.setId(ingredientData.getName());
-        
+        dragContext = new DragContext();
+
         Bounds origPos = base.localToScene(base.getBoundsInLocal());
-        
+
         this.showAt(origPos.getMinX(), origPos.getMinY());
     }
 
     public DragIngredient(IngredientData ingredientData) {
         this.ingredientData = ingredientData;
         this.setId(ingredientData.getName());
+        dragContext = new DragContext();
     }
 
-    private boolean checkForIntersections() {
+    public boolean checkForIntersections() {
         boolean validLocation = false;
         Bounds itemBounds = this.localToScene(this.getBoundsInLocal());
 
@@ -41,13 +46,14 @@ public class DragIngredient extends Group {
         return validLocation;
     }
 
-    private void showAt(double x, double y) {
+    public final void showAt(double x, double y) {
         ImageView iv = new ImageView(ingredientData.getImg());
+
+        this.layoutYProperty().unbind();
         this.setLayoutX(x);
         this.setLayoutY(y);
         this.getChildren().add(iv);
-
-        DragContext dragContext = new DragContext();
+        dragPane.getChildren().add(this);
 
         this.addEventFilter(MouseEvent.ANY, (final MouseEvent mouseEvent) -> {
             mouseEvent.consume();
@@ -58,10 +64,8 @@ public class DragIngredient extends Group {
 
             dragContext.mouseAnchorX = mouseEvent.getX();
             dragContext.mouseAnchorY = mouseEvent.getY();
-            dragContext.initialTranslateX
-                    = iv.getTranslateX();
-            dragContext.initialTranslateY
-                    = iv.getTranslateY();
+            dragContext.initialTranslateX = iv.getTranslateX();
+            dragContext.initialTranslateY = iv.getTranslateY();
         });
 
         this.addEventFilter(MouseEvent.MOUSE_DRAGGED, (final MouseEvent mouseEvent) -> {
@@ -77,11 +81,16 @@ public class DragIngredient extends Group {
 
         this.addEventFilter(MouseEvent.MOUSE_RELEASED, (final MouseEvent mouseEvent) -> {
             if (!checkForIntersections()) {
-                iv.setTranslateX(dragContext.initialTranslateX);
-                iv.setTranslateY(dragContext.initialTranslateY);
+                returnToOriginalPos();
                 checkForIntersections();
             }
         });
+    }
+
+    public void returnToOriginalPos() {
+        ImageView iv = (ImageView) this.getChildren().get(0);
+        iv.setTranslateX(dragContext.initialTranslateX);
+        iv.setTranslateY(dragContext.initialTranslateY);
     }
 
     private static class DragContext {
@@ -94,5 +103,9 @@ public class DragIngredient extends Group {
 
     public IngredientData getIngredientData() {
         return ingredientData;
+    }
+    
+    public static void setDragPane(Pane p) {
+        dragPane = p;
     }
 }

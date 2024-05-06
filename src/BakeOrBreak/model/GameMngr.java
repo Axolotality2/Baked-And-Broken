@@ -40,7 +40,7 @@ public class GameMngr {
         private final int daysPerDifficulty = 10, gameDays = 30;
         private int day;
         private long time;
-        private Level level;
+        private LevelData level;
 
         public LevelMngr() {
             this.day = 0;
@@ -51,12 +51,12 @@ public class GameMngr {
 
         public void startDay() {
             time = 0;
-            this.level = new Level(difficulty);
+            this.level = new LevelData(difficulty);
         }
 
         public void startBlankDay() {
             time = 0;
-            this.level = new Level(Difficulty.EASY);
+            this.level = new LevelData(new Difficulty(1));
         }
 
         public void endDay() throws Exception {
@@ -89,7 +89,7 @@ public class GameMngr {
             time++;
         }
 
-        public Level getLevel() {
+        public LevelData getLevel() {
             return level;
         }
 
@@ -102,19 +102,7 @@ public class GameMngr {
         }
 
         public void setDefaultDifficulty() throws Exception {
-            switch ((int) (day / daysPerDifficulty)) {
-                case 1:
-                    difficulty = Difficulty.EASY;
-                    break;
-                case 2:
-                    difficulty = Difficulty.MEDIUM;
-                    break;
-                case 3:
-                    difficulty = Difficulty.HARD;
-                    break;
-                default:
-                    throw new Exception();
-            }
+            difficulty = new Difficulty((int) (day / daysPerDifficulty));
         }
     }
 

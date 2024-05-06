@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -12,9 +13,10 @@ import javafx.scene.layout.Pane;
 
 public class BaseIngredient extends ImageView {
 
-    private static WeightedDist<String> ALLERGENS;
-    private static BaseIngredient[] INGREDIENTS;
-    
+    private static final WeightDist<String> ALLERGENS = new WeightDist<>();
+    private static final ArrayList<BaseIngredient> INGREDIENTS = new ArrayList<>();
+    private static Pane dragPane;
+
     private final IngredientData ingredientData;
 
     public BaseIngredient(IngredientData data) {
@@ -23,16 +25,11 @@ public class BaseIngredient extends ImageView {
         this.setId("BASE-" + data.getName());
     }
 
-    public IngredientData getIngredientData() {
-        return ingredientData;
-    }
-    
-    public static WeightedDist<String> getALLERGENS() {
-        return ALLERGENS;
-    }
-
     public static void initINGREDIENTS(String filepath) throws FileNotFoundException, IOException {
+        System.out.println("GOMBURZA");
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
         FileReader ingFile = new FileReader(filepath);
+        IngredientData[] jsonIngs;
         String contents = "";
 
         int i;
@@ -40,26 +37,42 @@ public class BaseIngredient extends ImageView {
             contents += (char) i;
         }
 
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        IngredientData[] jsonIngs = gson.fromJson(contents, IngredientData[].class);
-        BaseIngredient[] baseIngs = new BaseIngredient[jsonIngs.length];
-        for (int j = 0; j < jsonIngs.length; j++) {
-            baseIngs[j] = new BaseIngredient(new IngredientData(jsonIngs[j]));
+        jsonIngs = gson.fromJson(contents, IngredientData[].class);
+        for (IngredientData jsonIng : jsonIngs) {
+            INGREDIENTS.add(new BaseIngredient(new IngredientData(jsonIng)));
+            for (String allergen : jsonIng.getAllergens()) {
+                if(!ALLERGENS.getValues().contains(allergen)) {
+                    ALLERGENS.addEntry(allergen, 1);
+                }
+            }
         }
-
-        INGREDIENTS = baseIngs;
     }
 
-    public static void show(Pane pantry, Pane dragPane) {
+    public static void show(Pane pantry) {
         for (BaseIngredient bi : INGREDIENTS) {
             bi.addEventFilter(MouseEvent.MOUSE_PRESSED, (final MouseEvent event) -> {
-                DragIngredient dragIngredient = new DragIngredient(bi);
-
-                dragPane.getChildren().add(dragIngredient);
-                dragIngredient.requestFocus();
+                new DragIngredient(bi);
             });
+            
+            System.out.println(bi);
         }
 
         pantry.getChildren().addAll(INGREDIENTS);
+    }
+
+    public static String getAllergen() {
+        return ALLERGENS.pickRandom();
+    }
+
+    public static String[] getAllergen(int count) {
+        return ALLERGENS.pickRandom(count);
+    }
+
+    public IngredientData getIngredientData() {
+        return ingredientData;
+    }
+    
+    public static void setDragPane(Pane p) {
+        dragPane = p;
     }
 }

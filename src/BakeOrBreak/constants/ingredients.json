@@ -1,37 +1,49 @@
 [
   {
     "name": "flour",
-    "isFood": true,
-    "isAllergen": false
-  },
-  {
-    "name": "milk",
-    "isFood": true,
-    "isAllergen": false
-  },
-  {
-    "name": "sugar",
-    "isFood": true,
-    "isAllergen": false
-  },
-  {
-    "name": "cheese",
-    "isFood": true,
-    "isAllergen": false
-  },
-  {
-    "name": "butter",
-    "isFood": true,
-    "isAllergen": false
+    "allergens": [
+      "wheat"
+    ],
+    "isFood": true
   },
   {
     "name": "yeast",
-    "isFood": true,
-    "isAllergen": false
+    "allergens": [],
+    "isFood": true
+  },
+  {
+    "name": "sugar",
+    "allergens": [
+      "sugar"
+    ],
+    "isFood": true
+  },
+  {
+    "name": "butter",
+    "allergens": [
+      "dairy"
+    ],
+    "isFood": true
+  },
+  {
+    "name": "milk",
+    "allergens": [
+      "dairy"
+    ],
+    "isFood": true
   },
   {
     "name": "egg",
-    "isFood": true,
-    "isAllergen": false
+    "allergens": [
+      "egg"
+    ],
+    "isFood": true
+  },
+  {
+    "name": "cheese",
+    "allergens": [
+      "dairy"
+    ],
+    "isFood": true
   }
 ]
