@@ -1,4 +1,4 @@
-package BakeOrBreak.model;
+package BakeOrBreak.GameData;
 
 import java.util.HashMap;
 import javafx.scene.input.KeyCode;
@@ -40,7 +40,7 @@ public class GameMngr {
         private final int daysPerDifficulty = 10, gameDays = 30;
         private int day;
         private long time;
-        private LevelData level;
+        private LevelStatistic level;
 
         public LevelMngr() {
             this.day = 0;
@@ -51,22 +51,22 @@ public class GameMngr {
 
         public void startDay() {
             time = 0;
-            this.level = new LevelData(difficulty);
+            this.level = new LevelStatistic(difficulty);
         }
 
         public void startBlankDay() {
             time = 0;
-            this.level = new LevelData(new Difficulty(1));
+            this.level = new LevelStatistic(new Difficulty(1));
         }
 
         public void endDay() throws Exception {
             day++;
             
-            playerData.setCustomersServed(playerData.getCustomersServed() + level.getCustomersServed());
-            playerData.setDay(day);
-            playerData.setTotalRating(playerData.getTotalRating() + level.getTotalRating());
-            playerData.setTotalSpeed(playerData.getTotalSpeed() + level.getTotalSpeed());
-            setDefaultDifficulty();
+//            playerData.setCustomersServed(playerData.getCustomersServed() + level.getCustomersServed());
+//            playerData.setDay(day);
+//            playerData.setTotalRating(playerData.getTotalRating() + level.getTotalRating());
+//            playerData.setTotalSpeed(playerData.getTotalSpeed() + level.getTotalSpeed());
+//            setDefaultDifficulty();
         }
 
         private void checkRating() {
@@ -89,7 +89,7 @@ public class GameMngr {
             time++;
         }
 
-        public LevelData getLevel() {
+        public LevelStatistic getLevel() {
             return level;
         }
 

@@ -13,7 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-import BakeOrBreak.model.GameMngr;
+import BakeOrBreak.GameData.GameMngr;
 
 public class ControlsScreenController implements Initializable {
     

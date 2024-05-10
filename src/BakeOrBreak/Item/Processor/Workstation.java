@@ -1,5 +1,7 @@
-package BakeOrBreak.model;
+package BakeOrBreak.Item.Processor;
 
+import BakeOrBreak.Item.DragIngredient;
+import BakeOrBreak.Item.IngredientData;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Level;
@@ -83,7 +85,7 @@ public class Workstation extends ItemReceiver {
     }
 
     @Override
-    void put(DragIngredient ingredient) {
+    public void put(DragIngredient ingredient) {
         insert(ingredient);
         ((Pane) ingredient.getParent()).getChildren().remove(ingredient);
     }

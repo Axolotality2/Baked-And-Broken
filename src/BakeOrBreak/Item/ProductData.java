@@ -1,4 +1,4 @@
-package BakeOrBreak.model;
+package BakeOrBreak.Item;
 
 public class ProductData extends IngredientData {
     

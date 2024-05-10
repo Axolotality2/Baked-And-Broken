@@ -1,25 +1,39 @@
-package BakeOrBreak.model;
+package BakeOrBreak.Item.Processor;
 
+import BakeOrBreak.GameData.GameMngr;
+import BakeOrBreak.GameData.LevelStatistic;
+import BakeOrBreak.Item.DragIngredient;
+import BakeOrBreak.Item.IngredientData;
+import BakeOrBreak.Item.BaseIngredient;
+import BakeOrBreak.GameData.CustomerStatistic;
+import BakeOrBreak.GameData.Difficulty;
+import BakeOrBreak.GameData.OrderStatistic;
+import BakeOrBreak.Item.Product;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Timer;
+import javafx.animation.Interpolator;
+import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
+import javafx.util.Duration;
 
 public class Customer extends ItemReceiver {
 
     private final ArrayList<IngredientData> order;
     private final String[] allergies;
     private final long orderTime;
-    private LevelData levelData;
-    private long prepTime, leaveTime;
-    private int netRating, netSpeed;
+    private LevelStatistic levelData;
+    private double prepTime;
+    private CustomerStatistic customerStatistic;
     private static GameMngr gameManager = GameMngr.getGameManager();
 
-    public Customer(ArrayList<Product> order, String[] allergies, long leaveTime) {
+    public Customer(ArrayList<Product> order, String[] allergies, long waitTime) {
         this.order = new ArrayList<>();
         this.allergies = allergies;
-        this.leaveTime = leaveTime;
-        orderTime = GameMngr.getGameManager().getLevelMngr().getTime();
+        this.orderTime = GameMngr.getGameManager().getLevelMngr().getTime();
+        this.prepTime = waitTime;
 
         for (Product p : order) {
             this.order.add(p.getIngredientData());
@@ -30,51 +44,59 @@ public class Customer extends ItemReceiver {
     }
 
     public Customer(ArrayList<Product> order, String[] allergies) {
-        this(order, allergies, 0);
+        this.order = new ArrayList<>();
+        this.allergies = allergies;
+        this.orderTime = GameMngr.getGameManager().getLevelMngr().getTime();
+        this.prepTime = 0;
+        
         for (Product p : order) {
             prepTime += p.getIngredientData().getPrepTimeSec();
         }
-
-        leaveTime = orderTime + prepTime;
-
+        
         this.setImage(new Image(getClass().getResourceAsStream("/BakeOrBreak/view/assets/customer.png")));
         itemZones.add(this);
     }
 
     public Customer(Difficulty d) {
-        Product[] orderArr = Product.getProduct(d.getOrderSize());
         order = new ArrayList<>();
         orderTime = GameMngr.getGameManager().getLevelMngr().getTime();
         allergies = BaseIngredient.getAllergen(d.getAllergyCount());
-        leaveTime = orderTime;
 
-        for (Product p : orderArr) {
-            leaveTime += p.getIngredientData().getPrepTimeSec();
+        for (int i = 0; i < d.getOrderSize(); i++) {
+            Product p = Product.getProduct();
+            prepTime += p.getIngredientData().getPrepTimeSec();
             order.add(p.getIngredientData());
         }
 
         this.setImage(new Image(getClass().getResourceAsStream("/BakeOrBreak/view/assets/customer.png")));
         itemZones.add(this);
     }
-
-    public int rateProduct(Product product) throws Exception {
+    
+    public OrderStatistic rateProduct(Product product) throws Exception {
         long currentTime = GameMngr.getGameManager().getLevelMngr().getTime();
         int score = 2;
-        netSpeed = (int) (100 * (currentTime - orderTime) / prepTime);
+        boolean allergicReaction = false;
+        
+        double netSpeed = (int) (100 * (currentTime - orderTime) / prepTime);
 
         if (!order.remove(product.getIngredientData())) {
             order.remove(0);
         }
 
         for (String allergy : allergies) { // Test for allergies
-            score = Arrays.asList(product.getIngredientData().getAllergens()).contains(allergy) ? 2 : 3;
+            if (Arrays.asList(product.getIngredientData().getAllergens()).contains(allergy)) {
+                allergicReaction = true;
+            }
         }
-
+        
+        score += allergicReaction ? 0 : 1;
         score += netSpeed < 0.90 ? 1 : 0;
         score += netSpeed < 0.60 ? 1 : 0;
 
-        this.netRating += score;
-        return score;
+        OrderStatistic orderStatistic = new OrderStatistic(score, netSpeed, allergicReaction);
+        
+        customerStatistic.getorderStatistics().add(orderStatistic);
+        return orderStatistic;
     }
 
     @Override
@@ -87,27 +109,15 @@ public class Customer extends ItemReceiver {
         }
     }
 
-    public float getOverallRating() {
-        return netRating / order.size();
-    }
-
-    public float getOverallSpeed() {
-        return netSpeed / order.size();
-    }
-
-    public long getLeaveTime() {
-        return leaveTime;
+    public CustomerStatistic getCustomerStatistic() {
+        return customerStatistic;
     }
 
     public ArrayList<IngredientData> getOrder() {
         return order;
     }
-
-    public void setLeaveTime(long leaveTime) {
-        this.leaveTime = leaveTime;
-    }
-
-    public void setLeaveTime(float multiplier) {
-        this.leaveTime *= multiplier;
+    
+    public double getPrepTime() {
+        return prepTime;
     }
 }

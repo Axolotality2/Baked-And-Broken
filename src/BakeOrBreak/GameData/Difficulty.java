@@ -1,4 +1,4 @@
-package BakeOrBreak.model;
+package BakeOrBreak.GameData;
 
 public class Difficulty {
     

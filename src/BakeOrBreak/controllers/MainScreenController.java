@@ -1,5 +1,12 @@
 package BakeOrBreak.controllers;
 
+import BakeOrBreak.GameData.Difficulty;
+import BakeOrBreak.Item.Processor.Workstation;
+import BakeOrBreak.Item.Processor.Countertop;
+import BakeOrBreak.Item.Processor.Customer;
+import BakeOrBreak.GameData.LevelStatistic;
+import BakeOrBreak.Item.DragIngredient;
+import BakeOrBreak.Item.BaseIngredient;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -9,12 +16,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
-import BakeOrBreak.model.*;
 import java.util.ArrayList;
 import java.util.Timer;
 import javafx.animation.Interpolator;
-import javafx.animation.Transition;
 import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -42,9 +48,8 @@ public class MainScreenController implements Initializable {
     private Countertop cashierCounter;
     private ArrayList<Workstation> workstationList = new ArrayList<>();
     private Workstation activeWorkstation;
-    private LevelData levelData;
+    private LevelStatistic levelData = new LevelStatistic(new Difficulty(0));
     private final Rectangle customerBoxDimensions = new Rectangle(111, 258);
-    private Customer currentCustomer;
 
     private void addWorkstation(String... names) {
         for (String name : names) {
@@ -96,51 +101,6 @@ public class MainScreenController implements Initializable {
         customerBox.getChildren().add(cashierCounter);
     }
 
-    public void addCustomer(Customer c) {
-        currentCustomer = c;
-        customerBox.getChildren().add(c);
-        c.setLayoutX(-c.getBoundsInParent().getWidth());
-        c.setLayoutY(162 - c.getBoundsInParent().getHeight());
-
-        TranslateTransition enterTrans = new TranslateTransition(Duration.millis(500), c);
-        enterTrans.setDelay(Duration.millis(500));
-        enterTrans.setInterpolator(Interpolator.EASE_OUT);
-        enterTrans.setToX((customerBox.getBoundsInParent().getWidth() + c.getBoundsInParent().getWidth()) / 2);
-        enterTrans.play();
-
-        try {
-            objective.setText("Make a " + c.getOrder().get(0).getName());
-        } catch (IndexOutOfBoundsException ex) {
-            objective.setText("...");
-            System.out.println(ex.getMessage());
-        } catch (Exception ex) {
-            objective.setText("???");
-            System.out.println(ex.getMessage());
-        }
-    }
-
-    public void removeCustomer() {
-        TranslateTransition enterTrans = new TranslateTransition(Duration.millis(500), currentCustomer);
-        enterTrans.setDelay(Duration.millis(500));
-        enterTrans.setInterpolator(Interpolator.EASE_IN);
-        enterTrans.setFromX((customerBox.getBoundsInParent().getWidth() + currentCustomer.getBoundsInParent().getWidth()) / 2);
-        enterTrans.setToX(customerBox.getBoundsInParent().getWidth() + currentCustomer.getBoundsInParent().getWidth());
-        enterTrans.play();
-
-        Timer t = new java.util.Timer();
-        t.schedule(
-                new java.util.TimerTask() {
-            @Override
-            public void run() { // EEEEEEERRRRRRROOOOOOOOOOOORR !!
-                objective.setText("");
-                customerBox.getChildren().remove(currentCustomer);
-                t.cancel();
-            }
-        },
-                500
-        );
-    }
-
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         dragPane.setPickOnBounds(false);
@@ -152,20 +112,7 @@ public class MainScreenController implements Initializable {
         BaseIngredient.show(pantry);
         addWorkstation("bowl", "blender", "oven");
         setWorkstation("bowl");
-
         
-        
-        //* AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-        addCustomer(new Customer(new ArrayList<>(1), new String[1]));
-        new java.util.Timer().schedule(
-                new java.util.TimerTask() {
-            @Override
-            public void run() {
-                removeCustomer();
-            }
-        },
-                1000
-        );
-        //*/
+        new Customer(new ArrayList<>(), new String[0], 5).addCustomer();
     }
 }

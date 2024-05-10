@@ -1,5 +1,7 @@
-package BakeOrBreak.model;
+package BakeOrBreak.Item;
 
+import BakeOrBreak.Item.BaseIngredient;
+import BakeOrBreak.Item.Processor.ItemReceiver;
 import javafx.geometry.Bounds;
 import javafx.scene.Group;
 import javafx.scene.image.ImageView;

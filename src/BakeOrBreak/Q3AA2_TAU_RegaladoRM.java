@@ -1,6 +1,6 @@
 package BakeOrBreak;
 
-import BakeOrBreak.model.BaseIngredient;
+import BakeOrBreak.Item.BaseIngredient;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import javafx.application.Application;

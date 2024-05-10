@@ -1,5 +1,6 @@
-package BakeOrBreak.model;
+package BakeOrBreak.Item.Processor;
 
+import BakeOrBreak.Item.DragIngredient;
 import javafx.beans.property.DoubleProperty;
 
 public class Countertop extends ItemReceiver {

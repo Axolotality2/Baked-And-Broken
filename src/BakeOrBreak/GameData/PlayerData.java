@@ -1,10 +1,10 @@
-package BakeOrBreak.model;
+package BakeOrBreak.GameData;
 
 public class PlayerData {
 
     private int day, customersServed, totalRating, totalSpeed;
     private float avgRating, avgSpeed;
-
+    
     private void fixAvgs() {
         avgRating = getTotalRating() / customersServed;
         avgSpeed = getTotalSpeed() / customersServed;

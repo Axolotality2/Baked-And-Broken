@@ -1,5 +1,8 @@
-package BakeOrBreak.model;
+package BakeOrBreak.Item;
 
+import BakeOrBreak.Item.DragIngredient;
+import BakeOrBreak.Item.ProductData;
+import BakeOrBreak.GameData.WeightDist;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.FileNotFoundException;

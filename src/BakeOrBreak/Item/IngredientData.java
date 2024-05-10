@@ -1,4 +1,4 @@
-package BakeOrBreak.model;
+package BakeOrBreak.Item;
 
 import javafx.scene.image.Image;
 

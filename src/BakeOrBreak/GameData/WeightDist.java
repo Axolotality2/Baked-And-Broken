@@ -1,4 +1,4 @@
-package BakeOrBreak.model;
+package BakeOrBreak.GameData;
 
 import java.util.ArrayList;
 import java.util.HashMap;
