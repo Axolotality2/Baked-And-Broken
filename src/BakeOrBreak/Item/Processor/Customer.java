@@ -11,13 +11,8 @@ import BakeOrBreak.GameData.OrderStatistic;
 import BakeOrBreak.Item.Product;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Timer;
-import javafx.animation.Interpolator;
-import javafx.animation.TranslateTransition;
-import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Pane;
-import javafx.util.Duration;
 
 public class Customer extends ItemReceiver {
 
