@@ -13,12 +13,12 @@ import main.Exceptions.UnexpectedOrderException;
 public class Customer {
 
     private final Receipt order;
-    private final Set<Ingredient> allergies;
+    private final Set<String> allergies;
     private long orderTime;
     private Score score;
     private CustomerHandler handler;
 
-    public Customer(Receipt order, Ingredient[] allergies) {
+    public Customer(Receipt order, String[] allergies) {
         this.order = order;
         this.orderTime = System.currentTimeMillis();
         this.allergies = new HashSet<>(Arrays.asList(allergies));
@@ -36,7 +36,7 @@ public class Customer {
             throw new UnexpectedOrderException();
         }
         
-        Set<Ingredient> productAllergens = new HashSet<>(product.getAllergens());
+        Set<String> productAllergens = new HashSet<>(product.getAllergens());
         int speed = (int) Math.ceil(100 * (orderTime + order.getPrepTime() - System.currentTimeMillis()) / order.getPrepTime()); 
         int rating = 1;
         
@@ -63,7 +63,7 @@ public class Customer {
     /**
      * @return the allergies
      */
-    public Set<Ingredient> getAllergies() {
+    public Set<String> getAllergies() {
         return allergies;
     }
 

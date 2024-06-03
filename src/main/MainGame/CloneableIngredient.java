@@ -1,58 +1,77 @@
 package main.MainGame;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
-import javafx.geometry.Point2D;
+import java.util.List;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
-import main.GsonFileReader;
 import main.Core.FoodProcessing.Ingredient;
+import main.PlainFileReader;
 
 /**
  *
  * @author Rafael Inigo
  */
-public class CloneableIngredient extends Ingredient {
+public class CloneableIngredient extends ImageView {
     
-    private static final ArrayList<CloneableIngredient> BASIC_INGREDIENTS = new ArrayList<>();
-    private static Point2D placePoint = new Point2D(0, 0);
-    private transient ImageView imageView;
+    private static final ArrayList<Ingredient> BASIC_INGREDIENTS = new ArrayList<>();
+    private Ingredient base;
     
     public CloneableIngredient(String name, boolean isFood, String[] allergens) {
-        super(name, isFood, allergens);
-        this.imageView = new ImageView(getImg());
-        this.imageView.setId("BASE-" + name);
+        this.base = new Ingredient(name, isFood, allergens);
+        this.setImage(base.getImg());
+        this.setId("BASE-" + name);
     }
 
     public CloneableIngredient(String name, boolean isFood, boolean allergenic) {
-        super(name, isFood, allergenic);
-        this.imageView = new ImageView(img);
-        this.imageView.setId("BASE-" + name);
+        this.base = new Ingredient(name, isFood, allergenic);
+        this.setImage(base.getImg());
+        this.setId("BASE-" + name);
     }
     
     public CloneableIngredient(Ingredient ingredient) {
-        super(ingredient.getName(), ingredient.isFood(), ingredient.getAllergens());
+        this.base = new Ingredient(ingredient.getName(), ingredient.isFood(), ingredient.getAllergens());
+        this.setImage(base.getImg());
+        this.setId("BASE-" + base.getName());
     }
     
-    public void fillPantry(Pane pantryPane) {
-        for (CloneableIngredient ci : BASIC_INGREDIENTS) {
-            ci.imageView.addEventFilter(MouseEvent.MOUSE_PRESSED, (final MouseEvent event) -> {
-                new DraggableIngredient((Ingredient) this);
-            });
+    public static void fillPantry(Pane pantryPane) { 
+        pantryPane.getChildren().clear();
+        
+        for (Ingredient i : BASIC_INGREDIENTS) {
+            CloneableIngredient ci = new CloneableIngredient(i);
             
-            pantryPane.getChildren().add(imageView);
+            ci.addEventFilter(MouseEvent.MOUSE_PRESSED, (final MouseEvent event) -> {
+                new DraggableIngredient(i).draw();
+            }); 
+            
+            pantryPane.getChildren().add(ci);
         }
     }
     
-    public void setBASIC_INGREDIENTS(String location) {
-        new GsonFileReader().fillArrList(BASIC_INGREDIENTS, location);
+    public static void setBASIC_INGREDIENTS(String location) {
+        Gson gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .create();
+        Type type = new TypeToken<IngredientPOJO[]>() {}.getType();
+        IngredientPOJO[] contents = gson.fromJson(PlainFileReader.getFileContents(location), type);
+        ArrayList<Ingredient> ingredientArrList = new ArrayList<>();
+        
+        for (IngredientPOJO ip : contents) {
+            ingredientArrList.add(new Ingredient(ip.name, ip.isFood, ip.allergens));
+        }
+        
+        BASIC_INGREDIENTS.addAll(ingredientArrList);
     }
-    
-    public static Point2D getPlacePoint() {
-        return placePoint;
-    }
-    
-    public static void setPlacePoint(Point2D point) {
-        placePoint = point;
+
+    private class IngredientPOJO {
+
+        private String name;
+        private String[] allergens;
+        private boolean isFood;
     }
 }

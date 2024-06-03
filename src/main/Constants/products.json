@@ -1,0 +1,12 @@
+[
+  {
+    "name": "Pandesal",
+    "allergens": [
+      "egg",
+      "wheat",
+      "dairy"
+    ],
+    "complexity": 1,
+    "prepTimeMillis": 30000
+  }
+]

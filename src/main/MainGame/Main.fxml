@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.StackPane?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="270.0" prefWidth="360.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.MainGame.MainController">
+   <children>
+      <HBox minHeight="-Infinity" minWidth="-Infinity" prefHeight="270.0" prefWidth="360.0" spacing="9.0">
+         <StackPane.margin>
+            <Insets />
+         </StackPane.margin>
+         <children>
+            <AnchorPane fx:id="customerBox" minHeight="-Infinity" minWidth="-Infinity" prefHeight="258.0" prefWidth="111.0" styleClass="customer-box">
+               <children>
+                  <ImageView fx:id="clock" layoutX="60.0" layoutY="21.0">
+                     <image>
+                        <Image url="@../Assets/clock.png" />
+                     </image>
+                  </ImageView>
+               </children>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </AnchorPane>
+            <StackPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="258.0" prefWidth="228.0">
+               <children>
+                  <SplitPane fx:id="splitchen" dividerPositions="0.9689922480620154" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" styleClass="kitchen-pane">
+                    <items>
+                      <AnchorPane id="kitchenRoom" fx:id="kitchenPane" minHeight="150.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+                           <children>
+                              <AnchorPane fx:id="counterPane" prefWidth="228.0" AnchorPane.bottomAnchor="0.0" />
+                              <AnchorPane fx:id="infoPane" prefWidth="200.0">
+                                 <children>
+                                    <ImageView fx:id="taskbar" fitHeight="150.0" fitWidth="230.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../Assets/taskbar.png" />
+                                       </image>
+                                    </ImageView>
+                                    <Label fx:id="objective" layoutX="12.0" prefHeight="31.0" prefWidth="200.0" />
+                                    <FlowPane fx:id="iconTray" hgap="3.0" layoutX="9.0" layoutY="24.0" prefHeight="18.0" prefWidth="60.0" />
+                                 </children>
+                              </AnchorPane>
+                           </children></AnchorPane>
+                        <ScrollPane fx:id="pantryPane" hbarPolicy="NEVER" minHeight="0.0" prefHeight="92.0" prefWidth="228.0" vbarPolicy="NEVER">
+                           <content>
+                              <FlowPane fx:id="pantry" hgap="9.0" prefWidth="228.0" styleClass="pantry" vgap="27.0">
+                                 <padding>
+                                    <Insets bottom="18.0" left="6.0" right="6.0" top="21.0" />
+                                 </padding>
+                              </FlowPane>
+                           </content>
+                        </ScrollPane>
+                    </items>
+                     <StackPane.margin>
+                        <Insets bottom="6.0" left="6.0" right="6.0" top="6.0" />
+                     </StackPane.margin>
+                  </SplitPane>
+               </children>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </StackPane>
+         </children>
+         <padding>
+            <Insets bottom="6.0" left="6.0" right="6.0" top="6.0" />
+         </padding>
+      </HBox>
+      <Pane fx:id="dragPane" prefHeight="200.0" prefWidth="200.0" />
+   </children>
+   <stylesheets>
+        <URL value="@../universal.css" />        
+        <URL value="@main.css" />
+   </stylesheets>
+</StackPane>

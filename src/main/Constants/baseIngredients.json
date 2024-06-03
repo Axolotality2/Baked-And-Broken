@@ -1,0 +1,47 @@
+[
+  {
+    "name": "butter",
+    "allergens": [
+      "dairy"
+    ],
+    "isFood": true
+  },
+  {
+    "name": "cheese",
+    "allergens": [
+      "dairy"
+    ],
+    "isFood": true
+  },
+  {
+    "name": "egg",
+    "allergens": [
+      "egg"
+    ],
+    "isFood": true
+  },
+  {
+    "name": "flour",
+    "allergens": [
+      "wheat"
+    ],
+    "isFood": true
+  },
+  {
+    "name": "milk",
+    "allergens": [
+      "dairy"
+    ],
+    "isFood": false
+  },
+  {
+    "name": "sugar",
+    "allergens": [],
+    "isFood": true
+  },
+  {
+    "name": "yeast",
+    "allergens": [],
+    "isFood": true
+  }
+]

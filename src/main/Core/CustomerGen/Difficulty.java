@@ -14,7 +14,7 @@ public class Difficulty {
     private final WeightDist<Integer> complexity;
     private final WeightDist<Integer> orderSize;
     private final WeightDist<Integer> allergyCount;
-    private final WeightDist<Ingredient> allergies;
+    private final WeightDist<String> allergies;
 
     public Difficulty(int difficulty) {
         complexity = new WeightDist<>();
@@ -34,7 +34,7 @@ public class Difficulty {
             allergyCount.addEntry(i, Math.pow(0.5, i));
         }
         
-        for (Ingredient allergy : Ingredient.getVALID_ALLERGENS()) {
+        for (String allergy : Ingredient.getVALID_ALLERGENS()) {
             allergies.addEntry(allergy, 1);
         }
     }
@@ -47,7 +47,7 @@ public class Difficulty {
         return complexity.pickRandom();
     }
 
-    public Set<Ingredient> allergies() {
+    public Set<String> allergies() {
         return new HashSet<>(Arrays.asList(allergies.pickRandom(allergyCount.pickRandom())));
     }
 }

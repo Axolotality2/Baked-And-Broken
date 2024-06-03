@@ -1,4 +1,4 @@
-package legacy.controllers;
+package main.Settings;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +23,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-public class SettingsScreenController implements Initializable {
+public class SettingsController implements Initializable {
 
     @FXML
     private Pane rt;
@@ -100,8 +100,7 @@ public class SettingsScreenController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 //        groupChildrenTransform();
-        /*
-        String path = new File("src/q3aa2_tau_regaladorm/view/assets/backgroundmusic.mp3").getAbsolutePath();
+        String path = new File("src/main/Assets/backgroundmusic.mp3").getAbsolutePath();
         Media media = new Media(new File(path).toURI().toString()); 
         MediaPlayer mediaPlayer = new MediaPlayer(media);
         
@@ -130,7 +129,6 @@ public class SettingsScreenController implements Initializable {
                 mediaPlayer.setVolume((musicSlider.getValue() * (mainSlider.getValue() / 100)) / 100);
             }
         });
-         */
     }
 
 }

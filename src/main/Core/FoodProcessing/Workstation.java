@@ -10,11 +10,13 @@ public class Workstation {
     private static ArrayList<Workstation> workstations;
     private final String name;
     private final transient Image image;
+    private final transient Image icon;
     private ArrayList<Ingredient> contents;
 
     public Workstation(String name) {
         this.name = name;
-        this.image = new Image(getClass().getResourceAsStream("/BakeOrBreak/view/assets/" + name + ".png"));
+        this.image = new Image(getClass().getResourceAsStream("/main/Assets/Workstations/" + name + ".png"));
+        this.icon = new Image(getClass().getResourceAsStream("/main/Assets/Workstations/" + name + "Icon.png"));
         this.contents = new ArrayList<>();
     }
 
@@ -57,5 +59,9 @@ public class Workstation {
 
     public Image getImage() {
         return image;
+    }
+    
+    public Image getIcon() {
+        return icon;
     }
 }

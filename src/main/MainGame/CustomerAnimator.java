@@ -4,7 +4,9 @@ import java.util.Timer;
 import java.util.TimerTask;
 import javafx.animation.Interpolator;
 import javafx.animation.TranslateTransition;
+import javafx.application.Platform;
 import javafx.geometry.Point2D;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.util.Duration;
@@ -19,7 +21,7 @@ import main.Exceptions.UnexpectedOrderException;
  */
 public class CustomerAnimator extends CustomerHandler {
 
-    private static final String ASSET_LOC = "";
+    private static final String ASSET_LOC = "/main/Assets/customer.png";
     private final Pane customerPane;
     private final CustomerSprite customerImg;
     private final Point2D startPoint;
@@ -32,7 +34,7 @@ public class CustomerAnimator extends CustomerHandler {
         waitPoint = new Point2D(0d, 0d);
         endPoint = new Point2D(0d, 0d);
         customerPane = new Pane();
-        customerImg = new CustomerSprite(ASSET_LOC);
+        customerImg = new CustomerSprite(new Image(getClass().getResourceAsStream(ASSET_LOC)));
     }
 
     public CustomerAnimator(CustomerHandler customerHandler) {
@@ -41,19 +43,20 @@ public class CustomerAnimator extends CustomerHandler {
         waitPoint = new Point2D(0d, 0d);
         endPoint = new Point2D(0d, 0d);
         customerPane = new Pane();
-        customerImg = new CustomerSprite(ASSET_LOC);
+        customerImg = new CustomerSprite(new Image(getClass().getResourceAsStream(ASSET_LOC)));
     }
     
     private class CustomerSprite extends Receptacle {
         
-        private CustomerSprite(String location) {
-            super(location);
+        private CustomerSprite(Image img) {
+            super(img);
         }
         
         @Override
         public void put(DraggableIngredient ingredient) {
-            if (ingredient.toProduct() != null) {
-                getCue().get(0).score(ingredient.toProduct());
+            if (ingredient.getIngredient().toProduct() != null) {
+                getCue().get(0).score(ingredient.getIngredient().toProduct());
+                DraggableIngredient.getDragPane().getChildren().remove(ingredient);
             } else {
                 throw new UnexpectedOrderException();
             }
@@ -79,7 +82,12 @@ public class CustomerAnimator extends CustomerHandler {
                     new TimerTask() {
                 @Override
                 public void run() {
-                    shiftOut();
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            shiftOut();
+                        }
+                    });
                 }
             },
                     getCue().get(0).getOrder().getPrepTime());

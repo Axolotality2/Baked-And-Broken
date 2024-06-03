@@ -1,23 +1,16 @@
-package main;
+    package main;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  *
  * @author Rafael Inigo
- * @param <T>
  */
-public class GsonFileReader<T> {
+public class PlainFileReader {
     
-    public String getFileContents(String location) {
+    public static String getFileContents(String location) {
         FileReader ingFile = null;
         String contents = "";
         
@@ -42,15 +35,5 @@ public class GsonFileReader<T> {
         }
 
         return contents;
-    }
-    
-    public void fillArrList(ArrayList<T> arrayList, String location) {
-        Gson gson = new GsonBuilder()
-                .setPrettyPrinting()
-                .create();
-        Type type = new TypeToken<T>(){}.getType();
-        T[] contents = gson.fromJson(getFileContents(location), type);
-        arrayList.clear();
-        arrayList.addAll(Arrays.asList(contents));
     }
 }

@@ -11,7 +11,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import main.Core.FoodProcessing.Ingredient;
 
 /**
  *
@@ -20,13 +19,13 @@ import main.Core.FoodProcessing.Ingredient;
 public class Product {
 
     private static WeightDist<Product> validProducts;
-    private final static int BASE_TIME = 2500, ADD_TIME = 500;
+    private static final int BASE_TIME = 2500, ADD_TIME = 500;
     private String name;
-    private Set<Ingredient> allergens;
+    private Set<String> allergens;
     private int complexity;
     private long prepTimeMillis;
 
-    public Product(String name, Ingredient[] allergens, int complexity, long prepTimeMillis) {
+    public Product(String name, String[] allergens, int complexity, long prepTimeMillis) {
         this.name = name;
         this.allergens = new HashSet<>(Arrays.asList(allergens));
         this.complexity = complexity;
@@ -34,15 +33,15 @@ public class Product {
     }
 
     public Product(String name, int complexity, long prepTimeMillis) {
-        this(name, new Ingredient[0], complexity, prepTimeMillis);
+        this(name, new String[0], complexity, prepTimeMillis);
     }
 
-    public Product(String name, Ingredient[] allergens, int complexity) {
+    public Product(String name, String[] allergens, int complexity) {
         this(name, allergens, complexity, BASE_TIME + ADD_TIME * complexity);
     }
 
     public Product(String name, int complexity) {
-        this(name, new Ingredient[0], complexity, BASE_TIME + ADD_TIME * complexity);
+        this(name, new String[0], complexity, BASE_TIME + ADD_TIME * complexity);
     }
 
     public static void setValidProducts(String location) {
@@ -105,7 +104,7 @@ public class Product {
     /**
      * @return the allergens
      */
-    public Set<Ingredient> getAllergens() {
+    public Set<String> getAllergens() {
         return allergens;
     }
 

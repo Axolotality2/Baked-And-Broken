@@ -9,26 +9,26 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="270.0" prefWidth="360.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="BakeOrBreak.controllers.HomeScreenController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="270.0" prefWidth="360.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.Homepage.HomeController">
     <children>
-        <ImageView fx:id="background" fitHeight="240.0" fitWidth="360.0" pickOnBounds="true" preserveRatio="true">
+        <ImageView fx:id="background" fitHeight="270.0" fitWidth="360.0" pickOnBounds="true" preserveRatio="true">
             <image>
-                <Image url="@assets/breadground.png" />
+                <Image url="@../Assets/breadground.png" />
             </image>
             <viewport>
-                <Rectangle2D height="240.0" width="360.0" />
+                <Rectangle2D height="270.0" width="360.0" />
             </viewport>
         </ImageView>
         <ImageView fx:id="frame" fitHeight="270.0" fitWidth="360.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true">
             <image>
-                <Image url="@assets/border.png" />
+                <Image url="@../Assets/border.png" />
             </image>
         </ImageView>
         <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="5.0">
             <children>
                 <ImageView fx:id="title" fitHeight="66.0" fitWidth="168.0" pickOnBounds="true" preserveRatio="true">
                     <image>
-                        <Image url="@assets/title.png" />
+                        <Image url="@../Assets/title.png" />
                     </image>
                     <VBox.margin>
                         <Insets bottom="20.0" />
@@ -56,7 +56,7 @@
         </VBox>
     </children>
     <stylesheets>
-        <URL value="@UniversalCSS.css" />        
-        <URL value="@HomeScreenCSS.css" />
+        <URL value="@../universal.css" />        
+        <URL value="@home.css" />
     </stylesheets>
 </StackPane>

@@ -1,5 +1,5 @@
 HBox {
-    -fx-background-image: url('assets/gameBorder.png');
+    -fx-background-image: url('../Assets/gameBorder.png');
     -fx-background-repeat: no-repeat;
 }
 
@@ -18,7 +18,7 @@ HBox {
 .split-pane-divider {
     -fx-padding: 7.5;
     -fx-pref-height: 0;
-    -fx-background-image: url('assets/pantryHandle.png');
+    -fx-background-image: url('../Assets/pantryHandle.png');
     -fx-background-repeat: no-repeat;
 }
 
@@ -27,10 +27,10 @@ HBox {
 }
 
 .pantry {
-    -fx-background-image: url('assets/pantryBg.png');
+    -fx-background-image: url('../Assets/pantryBg.png');
     -fx-background-repeat: repeat-y;
 }
 
 .shelf {
-    -fx-background-image: url('assets/shelf.png')
+    -fx-background-image: url('../Assets/shelf.png')
 }

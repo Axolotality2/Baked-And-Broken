@@ -1,6 +1,7 @@
 package main.MainGame;
 
 import java.util.ArrayList;
+import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
 import javafx.scene.image.ImageView;
@@ -8,56 +9,68 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import main.Core.FoodProcessing.Ingredient;
 
-public class DraggableIngredient extends Ingredient {
+public class DraggableIngredient extends Group {
 
     private static final ArrayList<Receptacle> receptacles = new ArrayList<>();
     private static Pane dragPane;
     private static Point2D dropPoint = new Point2D(0d, 0d);
-    private final Group ingredientNode;
-    private final ImageView ingredientImg;
+    private final Ingredient ingredient;
+    private final ImageView iv;
     private final DragContext dragContext;
 
     public DraggableIngredient(Ingredient ingredient) {
-        super(ingredient);
-        ingredientNode = new Group();
-        ingredientImg = new ImageView(img);
+        super();
+        this.ingredient = ingredient;
+        iv = new ImageView(ingredient.getImg());
         dragContext = new DragContext();
-        
-        ingredientNode.setId("DRAG-" + name + "-" + System.currentTimeMillis());
+
+        this.setId("DRAG-" + ingredient.getName() + "-" + System.currentTimeMillis());
     }
 
     public final void draw() {
-        ingredientNode.layoutYProperty().unbind();
-        ingredientNode.setLayoutX(dropPoint.getX());
-        ingredientNode.setLayoutY(dropPoint.getY());
-        ingredientNode.getChildren().add(ingredientImg);
-        dragPane.getChildren().add(ingredientNode);
+        this.layoutYProperty().unbind();
+        this.setLayoutX(dropPoint.getX());
+        this.setLayoutY(dropPoint.getY());
+        this.getChildren().add(iv);
+        dragPane.getChildren().add(this);
+        addHandlers();
+    }
 
-        ingredientNode.addEventFilter(MouseEvent.ANY, (final MouseEvent mouseEvent) -> {
+    public final void draw(Point2D position) {
+        this.layoutYProperty().unbind();
+        this.setLayoutX(position.getX());
+        this.setLayoutY(position.getY());
+        this.getChildren().add(iv);
+        dragPane.getChildren().add(this);
+        addHandlers();
+    }
+
+    private void addHandlers() {
+        this.addEventFilter(MouseEvent.ANY, (final MouseEvent mouseEvent) -> {
             mouseEvent.consume();
         });
 
-        ingredientNode.addEventFilter(MouseEvent.MOUSE_PRESSED, (final MouseEvent mouseEvent) -> {
-            ingredientNode.layoutYProperty().unbind();
+        this.addEventFilter(MouseEvent.MOUSE_PRESSED, (final MouseEvent mouseEvent) -> {
+            this.layoutYProperty().unbind();
 
             dragContext.mouseAnchorX = mouseEvent.getX();
             dragContext.mouseAnchorY = mouseEvent.getY();
-            dragContext.initialTranslateX = ingredientImg.getTranslateX();
-            dragContext.initialTranslateY = ingredientImg.getTranslateY();
+            dragContext.initialTranslateX = iv.getTranslateX();
+            dragContext.initialTranslateY = iv.getTranslateY();
         });
 
-        ingredientNode.addEventFilter(MouseEvent.MOUSE_DRAGGED, (final MouseEvent mouseEvent) -> {
-            ingredientImg.setTranslateX(
+        this.addEventFilter(MouseEvent.MOUSE_DRAGGED, (final MouseEvent mouseEvent) -> {
+            iv.setTranslateX(
                     dragContext.initialTranslateX
                     + mouseEvent.getX()
                     - dragContext.mouseAnchorX);
-            ingredientImg.setTranslateY(
+            iv.setTranslateY(
                     dragContext.initialTranslateY
                     + mouseEvent.getY()
                     - dragContext.mouseAnchorY);
         });
 
-        ingredientNode.addEventFilter(MouseEvent.MOUSE_RELEASED, (final MouseEvent mouseEvent) -> {
+        this.addEventFilter(MouseEvent.MOUSE_RELEASED, (final MouseEvent mouseEvent) -> {
             if (!checkForIntersections()) {
                 returnToOriginalPos();
                 checkForIntersections();
@@ -68,26 +81,46 @@ public class DraggableIngredient extends Ingredient {
     public boolean checkForIntersections() {
         boolean validLocation = false;
 
+        Bounds thisBounds = this.localToScene(this.getBoundsInLocal());
+        System.out.println(this);
+        listCoords(thisBounds);
+        System.out.println();
+        
         for (Receptacle receptacle : receptacles) {
-            if (receptacle.canHold(ingredientImg)) {
+            Bounds receptacleBounds = receptacle.localToScene(receptacle.getBoundsInLocal());
+            
+            listCoords(receptacleBounds);
+            System.out.print("-" + containsBottom(receptacleBounds, thisBounds) + "\n");
+            
+            if (containsBottom(receptacleBounds, thisBounds)) {
                 receptacle.put(this);
-                dragPane.getChildren().remove(getIngredientNode());
                 validLocation = true;
             }
         }
+        
+        System.out.println("\n\n\n\n");
 
         if (!validLocation) {
             returnToOriginalPos();
         }
-        
+
         return validLocation;
     }
 
     public void returnToOriginalPos() {
-        ingredientImg.setTranslateX(dragContext.initialTranslateX);
-        ingredientImg.setTranslateY(dragContext.initialTranslateY);
+        iv.setTranslateX(dragContext.initialTranslateX);
+        iv.setTranslateY(dragContext.initialTranslateY);
     }
 
+    private void listCoords(Bounds b) {
+        System.out.print("(" + b.getMinX() + ", " + b.getMinY() + ") to (" + b.getMaxX() + ", " + b.getMaxY() + ")");
+    }
+    
+    private boolean containsBottom(Bounds container, Bounds object) {
+        return container.contains(new Point2D(object.getMinX(), object.getMaxY()))
+                    && container.contains(new Point2D(object.getMaxX(), object.getMaxY()));
+    }
+    
     private static class DragContext {
 
         public double mouseAnchorX;
@@ -104,19 +137,26 @@ public class DraggableIngredient extends Ingredient {
         return dropPoint;
     }
 
-    public Group getIngredientNode() {
-        return ingredientNode;
+    public ImageView getIv() {
+        return iv;
     }
 
-    public ImageView getIngredientImg() {
-        return ingredientImg;
+    public Ingredient getIngredient() {
+        return ingredient;
     }
 
     public static void setDragPane(Pane p) {
         dragPane = p;
     }
-    
+
     public static void setDropPoint(Point2D aDropPoint) {
         dropPoint = aDropPoint;
+    }
+
+    /**
+     * @return the receptacles
+     */
+    public static ArrayList<Receptacle> getReceptacles() {
+        return receptacles;
     }
 }

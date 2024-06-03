@@ -1,9 +1,9 @@
 package main.Core.FoodProcessing;
 
 import java.util.ArrayList;
+import java.util.List;
 import javafx.scene.image.Image;
 import main.Core.CustomerGen.Product;
-import main.GsonFileReader;
 
 /**
  *
@@ -11,7 +11,7 @@ import main.GsonFileReader;
  */
 public class Ingredient {
     
-    private static final ArrayList<Ingredient> VALID_ALLERGENS = new ArrayList<>();
+    private static final ArrayList<String> VALID_ALLERGENS = new ArrayList<>();
     
     protected final String name;
     protected final String[] allergens;
@@ -22,14 +22,14 @@ public class Ingredient {
         this.name = name;        
         this.isFood = isFood;
         this.allergens = allergenic ? new String[0] : new String[] {name};
-        this.img = new Image(getClass().getResourceAsStream("/BakeOrBreak/view/assets/food/" + name + ".png"));
+        this.img = new Image(getClass().getResourceAsStream("/main/Assets/Food/" + name + ".png"));
     }
     
     public Ingredient(String name, boolean isFood, String[] allergens) {
         this.name = name;        
         this.isFood = isFood;
         this.allergens = allergens;
-        this.img = new Image(getClass().getResourceAsStream("/BakeOrBreak/view/assets/food/" + name + ".png"));
+        this.img = new Image(getClass().getResourceAsStream("/main/Assets/Food/" + name + ".png"));
     }
     
     public Ingredient(Ingredient ingredient) {
@@ -45,12 +45,13 @@ public class Ingredient {
         
         return null;
     }
-
-    public static void setVALID_ALLERGENS(String location) {
-        new GsonFileReader().fillArrList(VALID_ALLERGENS, location);
+    
+    public static void setVALID_ALLERGENS(List<String> allergens) {
+        VALID_ALLERGENS.clear();
+        VALID_ALLERGENS.addAll(allergens);
     }
     
-    public static ArrayList<Ingredient> getVALID_ALLERGENS() {
+    public static ArrayList<String> getVALID_ALLERGENS() {
         return VALID_ALLERGENS;
     }
     

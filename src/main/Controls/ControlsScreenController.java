@@ -1,4 +1,4 @@
-package legacy.controllers;
+package main.Controls;
 
 import java.io.IOException;
 import java.net.URL;
@@ -13,7 +13,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
-import BakeOrBreak.model.GameMngr;
 
 public class ControlsScreenController implements Initializable {
     
@@ -27,7 +26,6 @@ public class ControlsScreenController implements Initializable {
     private Button swapStation;
     @FXML
     private Button dropContents;
-    private GameMngr gameMngr = GameMngr.getGameManager();
     
     @FXML
     private void pressKey(ActionEvent event) {
@@ -42,7 +40,6 @@ public class ControlsScreenController implements Initializable {
             return;
         }
         
-        gameMngr.getControlMngr().getKeyMap().put(source.getId(), event.getCode());
         source.setText(event.getCode().getName().toLowerCase());
         source.getScene().getRoot().requestFocus();
     }

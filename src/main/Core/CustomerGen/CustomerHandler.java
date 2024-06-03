@@ -20,6 +20,7 @@ public class CustomerHandler {
     public CustomerHandler(Difficulty difficulty) {
         this.cue = new ArrayList<>();
         this.difficulty = difficulty;
+        this.levelScore = new ArrayList<>();
         this.started = false;
     }
 
